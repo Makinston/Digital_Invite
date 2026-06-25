@@ -41,7 +41,7 @@ function ChatBubble({
       transition={{ duration: 0.4, delay }}
     >
       {fromCouple && (
-        <div className="w-7 h-7 rounded-full border border-gold/30 flex items-center justify-center font-display text-gold/60 text-xs mr-2 flex-shrink-0 mt-1">
+        <div className="w-7 h-7 rounded-full border border-gold/30 flex items-center justify-center font-display text-gold/60 text-xs mr-2 shrink-0 mt-1">
           F&O
         </div>
       )}
@@ -261,7 +261,7 @@ export default function RSVP({
 
         {/* Chat window */}
         <motion.div
-          className="border border-gold/20 bg-deep/[0.03] rounded-lg overflow-hidden"
+          className="border border-gold/20 bg-deep/3 rounded-lg overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -297,7 +297,7 @@ export default function RSVP({
           </div>
 
           {/* Controls */}
-          <div className="border-t border-gold/10 p-5 bg-charcoal/[0.02]">
+          <div className="border-t border-gold/10 p-5 bg-charcoal/2">
             <AnimatePresence mode="wait">
               {step === "greeting" && (
                 <motion.div
@@ -363,7 +363,7 @@ export default function RSVP({
               {step === "name" && (
                 <motion.div
                   key="name"
-                  className="flex gap-3"
+                  className="flex flex-col sm:flex-row gap-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -374,12 +374,12 @@ export default function RSVP({
                     onChange={(e) => setNameInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleName()}
                     placeholder="Your full name"
-                    className="flex-1 bg-transparent border border-gold/20 rounded px-3 py-2 text-sm font-body text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-gold/50"
+                    className="flex-1 bg-transparent border border-gold/20 rounded px-3 py-2.5 text-sm font-body text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-gold/50"
                     autoFocus
                   />
                   <button
                     onClick={handleName}
-                    className="border border-gold/40 text-gold/80 hover:border-gold hover:text-gold px-5 py-2 font-body text-sm transition-all duration-200 rounded-sm"
+                    className="border border-gold/40 text-gold/80 hover:border-gold hover:text-gold px-5 py-2.5 font-body text-sm transition-all duration-200 rounded-sm sm:w-auto w-full"
                   >
                     Send
                   </button>

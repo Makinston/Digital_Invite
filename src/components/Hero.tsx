@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import GoldParticles from "./GoldParticles";
 import { KenteBackground } from "./AfricanPattern";
@@ -11,8 +10,6 @@ interface HeroProps {
 }
 
 export default function Hero({ guestName }: HeroProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
   const scrollDown = () => {
     const next = document.getElementById("story");
     next?.scrollIntoView({ behavior: "smooth" });
@@ -39,7 +36,7 @@ export default function Hero({ guestName }: HeroProps) {
         {/* Personalized greeting */}
         {guestName && (
           <motion.p
-            className="text-gold/60 font-body text-xs tracking-[0.45em] uppercase mb-8"
+            className="text-gold/60 font-body text-xs tracking-[0.2em] sm:tracking-[0.35em] uppercase mb-6 sm:mb-8 px-2"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -50,7 +47,7 @@ export default function Hero({ guestName }: HeroProps) {
 
         {!guestName && (
           <motion.p
-            className="text-gold/50 font-body text-xs tracking-[0.45em] uppercase mb-8"
+            className="text-gold/50 font-body text-xs tracking-[0.2em] sm:tracking-[0.35em] uppercase mb-6 sm:mb-8"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -79,9 +76,9 @@ export default function Hero({ guestName }: HeroProps) {
 
         {/* Decorative line */}
         <motion.div
-          className="mx-auto my-8 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: "240px", opacity: 1 }}
+          className="mx-auto my-6 sm:my-8 h-px bg-linear-to-r from-transparent via-gold to-transparent max-w-60"
+          initial={{ width: "0%", opacity: 0 }}
+          animate={{ width: "100%", opacity: 1 }}
           transition={{ duration: 1.3, delay: 1.0 }}
         />
 
@@ -95,7 +92,7 @@ export default function Hero({ guestName }: HeroProps) {
           <p className="font-display text-[clamp(1.2rem,2.5vw,1.8rem)] text-offwhite/90 tracking-wider">
             {WEDDING.date}
           </p>
-          <p className="font-body text-xs text-gold/50 tracking-[0.35em] uppercase">
+          <p className="font-body text-xs text-gold/50 tracking-[0.15em] sm:tracking-[0.3em] uppercase leading-relaxed">
             {WEDDING.venue.name} · {WEDDING.venue.area}
           </p>
         </motion.div>
@@ -124,7 +121,7 @@ export default function Hero({ guestName }: HeroProps) {
           Scroll
         </span>
         <motion.div
-          className="w-px h-10 bg-gradient-to-b from-gold/50 to-transparent"
+          className="w-px h-10 bg-linear-to-b from-gold/50 to-transparent"
           animate={{ scaleY: [1, 0.5, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />

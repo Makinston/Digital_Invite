@@ -41,8 +41,8 @@ function EventCard({
         <p className="font-body text-sm text-offwhite/50 leading-relaxed mb-5">
           {event.description}
         </p>
-        <div className="border border-gold/20 px-4 py-2 inline-block">
-          <p className="font-body text-[0.6rem] tracking-[0.3em] uppercase text-gold/60">
+        <div className="border border-gold/20 px-3 py-2 inline-block max-w-full">
+          <p className="font-body text-[0.6rem] tracking-widest sm:tracking-[0.25em] uppercase text-gold/60 wrap-break-word">
             Dress · {event.dress}
           </p>
         </div>

@@ -35,12 +35,12 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7 }}
     >
-      <div className="relative border border-gold/25 p-4 md:p-6 min-w-[80px] md:min-w-[110px] text-center bg-deep/40">
-        <span className="font-display text-[clamp(2.5rem,6vw,4rem)] text-shimmer tabular-nums leading-none">
+      <div className="relative border border-gold/25 p-2 sm:p-4 md:p-6 min-w-[58px] sm:min-w-[80px] md:min-w-[110px] text-center bg-deep/40">
+        <span className="font-display text-[clamp(1.6rem,5vw,4rem)] text-shimmer tabular-nums leading-none">
           {String(value).padStart(2, "0")}
         </span>
       </div>
-      <p className="font-body text-[0.6rem] tracking-[0.4em] uppercase text-gold/40">
+      <p className="font-body text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] sm:tracking-[0.4em] uppercase text-gold/40">
         {label}
       </p>
     </motion.div>
@@ -89,13 +89,13 @@ export default function Countdown() {
         </motion.div>
 
         {!isPast && (
-          <div className="flex items-start justify-center gap-4 md:gap-8">
+          <div className="flex items-start justify-center gap-1.5 sm:gap-4 md:gap-8 w-full">
             <TimeUnit value={timeLeft.days} label="Days" />
-            <div className="font-display text-gold/30 text-4xl mt-4">:</div>
+            <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
             <TimeUnit value={timeLeft.hours} label="Hours" />
-            <div className="font-display text-gold/30 text-4xl mt-4">:</div>
+            <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
             <TimeUnit value={timeLeft.minutes} label="Minutes" />
-            <div className="font-display text-gold/30 text-4xl mt-4">:</div>
+            <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
             <TimeUnit value={timeLeft.seconds} label="Seconds" />
           </div>
         )}

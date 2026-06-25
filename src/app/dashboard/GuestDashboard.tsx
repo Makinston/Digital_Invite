@@ -168,7 +168,7 @@ export default function GuestDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0D0B08] text-white font-['Lato',sans-serif]">
+    <div className="min-h-screen bg-deep text-white font-['Lato',sans-serif]">
       {/* Header */}
       <div className="border-b border-yellow-500/10 px-6 py-5 flex items-center justify-between">
         <div>
@@ -202,7 +202,7 @@ export default function GuestDashboard() {
         )}
 
         {/* Upload guests */}
-        <div className="border border-yellow-500/15 rounded-sm p-6 bg-white/[0.02]">
+        <div className="border border-yellow-500/15 rounded-sm p-6 bg-white/2">
           <h2 className="text-sm font-medium text-yellow-400/80 mb-1 tracking-wider uppercase">
             Add Guests
           </h2>
@@ -293,11 +293,11 @@ export default function GuestDashboard() {
                   <thead>
                     <tr className="border-b border-white/5 text-[0.6rem] tracking-widest uppercase text-white/30">
                       <th className="text-left py-3 pr-4 font-normal">Name</th>
-                      <th className="text-left py-3 pr-4 font-normal">Invite Link</th>
-                      <th className="text-left py-3 pr-4 font-normal">QR</th>
+                      <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">Invite Link</th>
+                      <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">QR</th>
                       <th className="text-left py-3 pr-4 font-normal">Status</th>
-                      <th className="text-left py-3 pr-4 font-normal">Dietary</th>
-                      <th className="text-left py-3 font-normal">Message</th>
+                      <th className="text-left py-3 pr-4 font-normal hidden md:table-cell">Dietary</th>
+                      <th className="text-left py-3 font-normal hidden md:table-cell">Message</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -307,7 +307,7 @@ export default function GuestDashboard() {
                         return (
                           <motion.tr
                             key={g.id}
-                            className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
+                            className="border-b border-white/4 hover:bg-white/2 transition-colors"
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.02 }}
@@ -315,11 +315,11 @@ export default function GuestDashboard() {
                             <td className="py-3 pr-4 text-white/80 font-medium whitespace-nowrap">
                               {g.name}
                             </td>
-                            <td className="py-3 pr-4 text-[0.65rem] text-yellow-500/40 whitespace-nowrap">
+                            <td className="py-3 pr-4 text-[0.65rem] text-yellow-500/40 whitespace-nowrap hidden sm:table-cell">
                               /invite/{g.token}
                               <CopyButton text={link} />
                             </td>
-                            <td className="py-3 pr-4">
+                            <td className="py-3 pr-4 hidden sm:table-cell">
                               <a
                                 href={`/api/qr/${g.token}`}
                                 target="_blank"
@@ -332,10 +332,10 @@ export default function GuestDashboard() {
                             <td className="py-3 pr-4 whitespace-nowrap">
                               <StatusBadge rsvp={g.rsvp} />
                             </td>
-                            <td className="py-3 pr-4 text-[0.7rem] text-white/30">
+                            <td className="py-3 pr-4 text-[0.7rem] text-white/30 hidden md:table-cell">
                               {g.rsvp?.dietary ?? "—"}
                             </td>
-                            <td className="py-3 text-[0.7rem] text-white/30 max-w-[200px] truncate">
+                            <td className="py-3 text-[0.7rem] text-white/30 max-w-50 truncate hidden md:table-cell">
                               {g.rsvp?.message ?? "—"}
                             </td>
                           </motion.tr>

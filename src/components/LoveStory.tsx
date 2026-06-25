@@ -27,17 +27,16 @@ function StoryScene({
   return (
     <motion.div
       ref={ref}
-      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-10 md:gap-16 items-center py-16 md:py-24`}
+      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-8 md:gap-16 items-center py-10 md:py-24`}
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Image placeholder */}
-      <div className="w-full md:w-[45%] aspect-[4/5] flex-shrink-0">
+      <div className="w-full sm:w-4/5 md:w-[45%] aspect-4/3 sm:aspect-square md:aspect-4/5 shrink-0">
         <div className="relative w-full h-full">
-          {/* Gold frame */}
-          <div className="absolute -inset-2 border border-gold/20 rounded-sm" />
-          <div className="absolute -inset-1 border border-gold/10 rounded-sm" />
+          {/* Gold frame — inset kept inside viewport on mobile */}
+          <div className="absolute -inset-1 md:-inset-2 border border-gold/20 rounded-sm" />
           {/* Placeholder */}
           <div className="w-full h-full bg-charcoal/30 rounded-sm flex flex-col items-center justify-center gap-4 border border-gold/10">
             <AdinkraSymbol className="w-12 h-12 opacity-30" />
@@ -47,7 +46,7 @@ function StoryScene({
           </div>
           {/* Chapter tag */}
           <div
-            className={`absolute -bottom-4 ${isEven ? "-right-4" : "-left-4"} bg-deep border border-gold/30 px-4 py-2`}
+            className={`absolute -bottom-3 md:-bottom-4 ${isEven ? "-right-3 md:-right-4" : "-left-3 md:-left-4"} bg-deep border border-gold/30 px-3 py-1.5`}
           >
             <span className="font-display text-gold/80 text-sm tracking-[0.2em]">
               {chapter}
