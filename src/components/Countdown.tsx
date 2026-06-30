@@ -35,7 +35,7 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7 }}
     >
-      <div className="relative border border-gold/25 p-2 sm:p-4 md:p-6 min-w-[58px] sm:min-w-[80px] md:min-w-[110px] text-center bg-deep/40">
+      <div className="relative border border-gold/25 p-2 sm:p-4 md:p-6 min-w-14.5 sm:min-w-20 md:min-w-27.5 text-center bg-deep/40">
         <span className="font-display text-[clamp(1.6rem,5vw,4rem)] text-shimmer tabular-nums leading-none">
           {String(value).padStart(2, "0")}
         </span>
@@ -83,7 +83,7 @@ export default function Countdown() {
           <p className="font-body text-[0.65rem] tracking-[0.45em] uppercase text-gold/50 mb-4">
             {isPast ? "We are married!" : "Counting down to forever"}
           </p>
-          <h2 className="font-display text-[clamp(2rem,5vw,3.5rem)] text-offwhite font-light mb-12">
+          <h2 className="font-script text-[clamp(2rem,5vw,3.5rem)] text-offwhite mb-12">
             {isPast ? "It happened." : WEDDING.date}
           </h2>
         </motion.div>
@@ -101,7 +101,7 @@ export default function Countdown() {
         )}
 
         <motion.p
-          className="mt-12 font-display text-xl md:text-2xl text-offwhite/30 font-light italic"
+          className="mt-12 font-script text-2xl md:text-3xl text-offwhite/30"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}

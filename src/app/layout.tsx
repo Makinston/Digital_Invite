@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Lato } from "next/font/google";
+import { Cormorant_Garamond, Lato, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -13,6 +13,13 @@ const lato = Lato({
   weight: ["300", "400", "700"],
   subsets: ["latin"],
   variable: "--font-body",
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-script",
   display: "swap",
 });
 
@@ -31,7 +38,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${lato.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${lato.variable} ${greatVibes.variable}`}>
       <body>{children}</body>
     </html>
   );

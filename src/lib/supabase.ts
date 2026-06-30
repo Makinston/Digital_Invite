@@ -12,9 +12,9 @@ export type RSVP = {
   id: string;
   guest_token?: string;
   name: string;
+  whatsapp?: string;
   attending: boolean;
   plus_one: boolean;
-  dietary?: string;
   message?: string;
   created_at: string;
 };
@@ -44,9 +44,9 @@ create table if not exists rsvps (
   id uuid primary key default gen_random_uuid(),
   guest_token text references guests(token) on delete set null,
   name text not null,
+  whatsapp text,
   attending boolean not null,
   plus_one boolean default false,
-  dietary text,
   message text,
   created_at timestamptz default now()
 );

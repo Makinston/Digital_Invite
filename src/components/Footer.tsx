@@ -24,7 +24,7 @@ export default function Footer() {
         >
           <AdinkraSymbol className="w-10 h-10 mx-auto mb-6 opacity-50" />
 
-          <p className="font-display text-[clamp(2rem,5vw,3rem)] text-shimmer font-light mb-2">
+          <p className="font-script text-[clamp(2rem,5vw,3rem)] text-shimmer mb-2">
             {WEDDING.bride} &amp; {WEDDING.groom}
           </p>
 
@@ -41,7 +41,7 @@ export default function Footer() {
             {WEDDING.venue.area}
           </p>
 
-          <p className="font-body text-[0.65rem] text-gold/25 tracking-[0.25em]">
+          <p className="font-script text-xl text-gold/40">
             {WEDDING.hashtag}
           </p>
         </motion.div>

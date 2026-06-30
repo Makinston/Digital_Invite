@@ -67,7 +67,7 @@ export default function GuestWall() {
           <p className="font-body text-[0.65rem] tracking-[0.45em] uppercase text-gold/50 mb-4">
             From the people who love you
           </p>
-          <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] text-offwhite font-light">
+          <h2 className="font-script text-[clamp(2.5rem,6vw,4rem)] text-offwhite">
             The Love Wall
           </h2>
           <div className="mt-6 max-w-xs mx-auto">

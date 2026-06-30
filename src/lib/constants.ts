@@ -1,51 +1,53 @@
 export const WEDDING = {
   bride: "Feyisayo",
   groom: "Olawale",
+  brideFull: "Feyisayo Olasoju",
   coupleDisplay: "Feyisayo & Olawale",
-  date: "September 26, 2026",
-  dateISO: "2026-09-26T12:00:00",
-  hashtag: "#FeyiAndWale2026",
+  date: "26 September 2026",
+  dateISO: "2026-09-26T08:00:00",
+  hashtag: "#FromDmToForever",
+  rsvpDeadline: "September 5, 2026",
   venue: {
     name: "Erly Moon Event Place",
     area: "Ikola, Lagos",
     mapUrl: "https://maps.google.com/?q=Ikola+Lagos",
   },
-  events: [
+  dayProgram: [
+    { time: "8:00 AM", event: "Church Service" },
+    { time: "10:00 AM", event: "Guest Arrival" },
+    { time: "11:00 AM", event: "Engagement" },
+    { time: "12:00 PM", event: "Reception" },
+  ],
+  howWeMet: {
+    heading: "How We Met",
+    paragraphs: [
+      "We met on WhatsApp through a mutual group that we both later left. Although we had never spoken, we somehow ended up saving each other's numbers.",
+      "Our first conversation began on October 11, 2022, when I saw her WhatsApp status that read, \"Happy Birthday to me.\" I simply wished her a happy birthday and that was it.",
+      "Exactly one month later, I came across another of her statuses — this time, she had posted a photo of herself for the very first time. Curious, I asked, \"Is this you?\" She replied, \"Yes.\" That simple conversation became the beginning of our beautiful journey together.",
+    ],
+  },
+  toasts: [
     {
-      id: "traditional",
-      name: "Traditional Ceremony",
-      emoji: "🥁",
-      time: "10:00 AM",
-      description: "A celebration of culture, heritage, and love.",
-      dress: "Ankara / Traditional Attire",
+      from: "Olawale",
+      to: "Feyisayo",
+      text: "I'm forever grateful that our paths crossed and that God made you my better half, my companion, my wife, and the future mother of our beautiful children. You are adorable, kind, selfless, patient, and, above all, my biggest fan.\n\nAs we begin this journey of forever together, I want you to know that I will always have your best interests at heart. I promise to love, cherish, support, and stand by you through every season of life.",
+      closing: "I love you always, Feyisayo, my Queen. ❤️",
     },
     {
-      id: "reception",
-      name: "Wedding Reception",
-      emoji: "✨",
-      time: "3:00 PM",
-      description: "An evening of joy, music, and togetherness.",
-      dress: "Smart Casual / Evening Wear",
+      from: "Feyisayo",
+      to: "Olawale",
+      text: "Today, I stand here filled with gratitude. Thank you for choosing me, for loving me so intentionally, and for being the man I prayed for, even before I knew your name. As we begin this new chapter together, I promise to love you, support you, pray with you, and choose you every single day.",
+      closing: "Here's to the unexpected message that started it all, to the love we've built together, and to a lifetime of beautiful memories still waiting to be written. I love you so much. Cheers to us! 🥂❤️",
     },
   ],
-  story: [
-    {
-      chapter: "01",
-      title: "The Beginning",
-      subtitle: "Where it all started",
-      body: "Two souls, one city, a chance encounter that would change everything. What started as a simple hello grew into a conversation neither of them wanted to end.",
+  dressCode: "Contact a member of the family for your Asooke",
+  gifts: {
+    message:
+      "Your presence is all we could ask for. If you wish to send a token of love, it is greatly appreciated.",
+    account: {
+      name: "FEYISAYO OLASOJU",
+      bank: "Palmpay",
+      number: "7066139178",
     },
-    {
-      chapter: "02",
-      title: "The Journey",
-      subtitle: "Growing together",
-      body: "Through seasons of laughter and moments of quiet understanding, they found in each other a home — a safe place, a best friend, a forever person.",
-    },
-    {
-      chapter: "03",
-      title: "The Promise",
-      subtitle: "And then he asked",
-      body: "On a night neither will forget, surrounded by everything they love, Olawale asked the question and Feyisayo said yes. The rest, they are writing together.",
-    },
-  ],
+  },
 } as const;

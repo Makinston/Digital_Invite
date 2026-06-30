@@ -2,120 +2,69 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { KenteDivider, AdinkraSymbol } from "./AfricanPattern";
+import { KenteDivider } from "./AfricanPattern";
 import { WEDDING } from "@/lib/constants";
-
-function StoryScene({
-  chapter,
-  title,
-  subtitle,
-  body,
-  index,
-  imageAlt,
-}: {
-  chapter: string;
-  title: string;
-  subtitle: string;
-  body: string;
-  index: number;
-  imageAlt: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
-  const isEven = index % 2 === 0;
-
-  return (
-    <motion.div
-      ref={ref}
-      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-8 md:gap-16 items-center py-10 md:py-24`}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {/* Image placeholder */}
-      <div className="w-full sm:w-4/5 md:w-[45%] aspect-4/3 sm:aspect-square md:aspect-4/5 shrink-0">
-        <div className="relative w-full h-full">
-          {/* Gold frame — inset kept inside viewport on mobile */}
-          <div className="absolute -inset-1 md:-inset-2 border border-gold/20 rounded-sm" />
-          {/* Placeholder */}
-          <div className="w-full h-full bg-charcoal/30 rounded-sm flex flex-col items-center justify-center gap-4 border border-gold/10">
-            <AdinkraSymbol className="w-12 h-12 opacity-30" />
-            <p className="font-body text-[0.6rem] text-gold/30 tracking-[0.3em] uppercase">
-              Photo
-            </p>
-          </div>
-          {/* Chapter tag */}
-          <div
-            className={`absolute -bottom-3 md:-bottom-4 ${isEven ? "-right-3 md:-right-4" : "-left-3 md:-left-4"} bg-deep border border-gold/30 px-3 py-1.5`}
-          >
-            <span className="font-display text-gold/80 text-sm tracking-[0.2em]">
-              {chapter}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Text */}
-      <div className="flex-1 text-charcoal">
-        <p className="font-body text-[0.65rem] tracking-[0.4em] uppercase text-muted mb-3">
-          {subtitle}
-        </p>
-        <h3 className="font-display text-[clamp(2rem,4vw,3rem)] font-light leading-tight mb-5 text-charcoal">
-          {title}
-        </h3>
-        <div className="w-12 h-px bg-gold mb-5" />
-        <p className="font-body text-base leading-relaxed text-charcoal/70">
-          {body}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
 
 export default function LoveStory() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-10%" });
+  const storyRef = useRef<HTMLDivElement>(null);
+  const storyInView = useInView(storyRef, { once: true, margin: "-10%" });
 
   return (
     <section id="story" className="bg-offwhite py-20 md:py-32 overflow-hidden">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-3xl mx-auto px-6">
         {/* Section header */}
         <motion.div
           ref={titleRef}
-          className="text-center mb-16"
+          className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
           <p className="font-body text-[0.65rem] tracking-[0.45em] uppercase text-muted mb-4">
-            How it happened
+            Our Love Story
           </p>
-          <h2 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-charcoal font-light">
-            Our Story
+          <h2 className="font-script text-[clamp(2.5rem,6vw,4.5rem)] text-charcoal">
+            {WEDDING.howWeMet.heading}
           </h2>
           <div className="mt-6 max-w-xs mx-auto">
             <KenteDivider />
           </div>
         </motion.div>
 
-        {/* Story scenes */}
-        {WEDDING.story.map((scene, i) => (
-          <div key={scene.chapter}>
-            <StoryScene
-              chapter={scene.chapter}
-              title={scene.title}
-              subtitle={scene.subtitle}
-              body={scene.body}
-              index={i}
-              imageAlt={scene.title}
-            />
-            {i < WEDDING.story.length - 1 && (
-              <div className="max-w-xs mx-auto my-4">
-                <KenteDivider />
-              </div>
-            )}
+        {/* Story paragraphs */}
+        <motion.div
+          ref={storyRef}
+          className="space-y-6"
+          initial={{ opacity: 0, y: 24 }}
+          animate={storyInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {WEDDING.howWeMet.paragraphs.map((p, i) => (
+            <p
+              key={i}
+              className="font-body text-base sm:text-lg leading-[1.85] text-charcoal/75"
+            >
+              {p}
+            </p>
+          ))}
+        </motion.div>
+
+        {/* Hashtag */}
+        <motion.div
+          className="mt-12 text-center"
+          initial={{ opacity: 0, y: 12 }}
+          animate={storyInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <div className="max-w-xs mx-auto mb-6">
+            <KenteDivider />
           </div>
-        ))}
+          <p className="font-script text-[clamp(1.6rem,3.5vw,2.4rem)] text-gold">
+            {WEDDING.hashtag}
+          </p>
+        </motion.div>
       </div>
     </section>
   );
