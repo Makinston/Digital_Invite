@@ -44,7 +44,7 @@ function ProgramRow({
 
       {/* Event */}
       <div className="pb-10 flex-1">
-        <p className="font-script text-[clamp(1.2rem,2.5vw,1.6rem)] text-offwhite leading-tight">
+        <p className="font-display text-[clamp(1.2rem,2.5vw,1.6rem)] text-offwhite font-light leading-tight">
           {event}
         </p>
       </div>
@@ -117,7 +117,7 @@ export default function DayProgram() {
           <p className="font-body text-[0.6rem] tracking-[0.4em] uppercase text-gold/35 mb-3">
             Venue
           </p>
-          <p className="font-script text-[clamp(1.4rem,3vw,2rem)] text-offwhite/90 mb-1">
+          <p className="font-display text-[clamp(1.4rem,3vw,2rem)] text-offwhite/90 font-light mb-1">
             {WEDDING.venue.name}
           </p>
           <p className="font-body text-sm text-offwhite/35 mb-6">

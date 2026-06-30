@@ -37,7 +37,7 @@ export default function Gifts() {
           </div>
 
           <motion.p
-            className="font-script text-[clamp(1.2rem,2.6vw,1.6rem)] text-offwhite/55 leading-relaxed mb-10"
+            className="font-display text-[clamp(1rem,2.2vw,1.3rem)] text-offwhite/55 font-light italic leading-relaxed mb-10"
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -55,7 +55,7 @@ export default function Gifts() {
             <p className="font-body text-[0.6rem] tracking-[0.4em] uppercase text-gold/35 mb-4">
               Bank transfer
             </p>
-            <p className="font-script text-xl sm:text-2xl text-offwhite/80 mb-1">
+            <p className="font-body text-base sm:text-lg text-offwhite/80 mb-1 tracking-widest uppercase">
               {WEDDING.gifts.account.name}
             </p>
             <p className="font-body text-[0.65rem] tracking-[0.3em] uppercase text-gold/40 mb-5">

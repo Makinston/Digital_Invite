@@ -10,9 +10,38 @@ export default function AudioPlayer() {
   const musicUrl = process.env.NEXT_PUBLIC_MUSIC_URL;
 
   useEffect(() => {
-    // Show player after hero section is passed
-    const timer = setTimeout(() => setVisible(true), 3500);
-    return () => clearTimeout(timer);
+    const a = audioRef.current;
+    if (!a) return;
+
+    const showTimer = setTimeout(() => setVisible(true), 1800);
+
+    // AbortController lets us remove all gesture listeners at once
+    const controller = new AbortController();
+    const { signal } = controller;
+    let started = false;
+
+    const start = () => {
+      if (started) return;
+      started = true;
+      controller.abort();
+      a.play().then(() => setPlaying(true)).catch(() => {});
+    };
+
+    // Try immediate autoplay (works on desktop if browser allows)
+    a.play()
+      .then(() => { started = true; setPlaying(true); })
+      .catch(() => {
+        // Blocked — fire on the very first user interaction
+        document.addEventListener("scroll",     start, { signal, passive: true });
+        document.addEventListener("touchstart", start, { signal, passive: true });
+        document.addEventListener("click",      start, { signal });
+        document.addEventListener("keydown",    start, { signal });
+      });
+
+    return () => {
+      clearTimeout(showTimer);
+      controller.abort();
+    };
   }, []);
 
   const toggle = () => {
@@ -30,7 +59,7 @@ export default function AudioPlayer() {
 
   return (
     <>
-      <audio ref={audioRef} src={musicUrl} loop preload="none" />
+      <audio ref={audioRef} src={musicUrl} loop preload="auto" />
       <AnimatePresence>
         {visible && (
           <motion.button
@@ -43,7 +72,6 @@ export default function AudioPlayer() {
             title={playing ? "Pause music" : "Play music"}
             aria-label={playing ? "Pause music" : "Play music"}
           >
-            {/* Sound wave bars when playing */}
             {playing ? (
               <div className="flex items-end gap-0.5 h-4">
                 {[1, 1.6, 0.8, 1.4, 1].map((h, i) => (
@@ -51,12 +79,7 @@ export default function AudioPlayer() {
                     key={i}
                     className="w-0.5 bg-gold rounded-full"
                     animate={{ scaleY: [1, h, 0.5, h, 1] }}
-                    transition={{
-                      duration: 0.8,
-                      delay: i * 0.1,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
+                    transition={{ duration: 0.8, delay: i * 0.1, repeat: Infinity, ease: "easeInOut" }}
                     style={{ height: "100%", transformOrigin: "bottom" }}
                   />
                 ))}

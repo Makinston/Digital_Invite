@@ -57,7 +57,7 @@ function ToastCard({
       </div>
 
       {/* Closing */}
-      <p className="font-script text-lg sm:text-xl text-gold/70 mt-6 leading-relaxed">
+      <p className="font-display text-base sm:text-lg text-gold/70 font-light italic mt-6 leading-relaxed">
         {toast.closing}
       </p>
     </motion.div>

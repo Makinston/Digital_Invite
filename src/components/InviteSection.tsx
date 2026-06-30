@@ -43,7 +43,7 @@ export default function InviteSection() {
           </div>
 
           <motion.p
-            className="font-script text-[clamp(1.3rem,3vw,1.8rem)] text-offwhite/70 leading-relaxed"
+            className="font-display text-[clamp(1.1rem,2.5vw,1.5rem)] text-offwhite/70 font-light italic leading-relaxed"
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.3 }}

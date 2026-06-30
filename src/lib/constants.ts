@@ -40,7 +40,7 @@ export const WEDDING = {
       closing: "Here's to the unexpected message that started it all, to the love we've built together, and to a lifetime of beautiful memories still waiting to be written. I love you so much. Cheers to us! 🥂❤️",
     },
   ],
-  dressCode: "Contact a member of the family for your Asooke",
+  dressCode: "Contact a member of the family for your Asoebi",
   gifts: {
     message:
       "Your presence is all we could ask for. If you wish to send a token of love, it is greatly appreciated.",

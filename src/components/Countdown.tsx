@@ -101,7 +101,7 @@ export default function Countdown() {
         )}
 
         <motion.p
-          className="mt-12 font-script text-2xl md:text-3xl text-offwhite/30"
+          className="mt-12 font-display text-xl md:text-2xl text-offwhite/30 font-light italic"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
