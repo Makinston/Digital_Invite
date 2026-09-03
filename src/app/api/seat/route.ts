@@ -1,29 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { db, isDbConfigured, ensureSchema } from "@/lib/db";
 
-// Public endpoint for the "Check Seat Number" lookup — deliberately returns
-// only name + seat_number, nothing else (no token, whatsapp, email, etc.).
-export async function GET(request: NextRequest) {
-  const name = request.nextUrl.searchParams.get("name")?.trim();
-
-  if (!name || name.length < 2) {
-    return NextResponse.json({ error: "Enter at least 2 characters" }, { status: 400 });
-  }
-
+// Public endpoint for the "Check Seat Number" directory — deliberately
+// returns only name + seat_number, nothing else (no token, whatsapp, etc.).
+// The guest list is small (a few hundred at most), so we just return
+// everyone and let the client filter as they type — instant, no round trips.
+export async function GET() {
   if (!isDbConfigured || !db) {
-    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+    return NextResponse.json({ guests: [] });
   }
   await ensureSchema();
 
-  const result = await db.execute({
-    sql: "select name, seat_number from guests where lower(name) like lower(?) order by name limit 10",
-    args: [`%${name}%`],
-  });
+  const result = await db.execute("select name, seat_number from guests order by name asc");
 
-  const matches = result.rows.map((r) => ({
+  const guests = result.rows.map((r) => ({
     name: r.name as string,
     seat_number: r.seat_number as string | null,
   }));
 
-  return NextResponse.json({ matches });
+  return NextResponse.json({ guests });
 }

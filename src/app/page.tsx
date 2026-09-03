@@ -11,6 +11,7 @@ import Directions from "@/components/Directions";
 import DressCode from "@/components/DressCode";
 import Gifts from "@/components/Gifts";
 import RSVP from "@/components/RSVP";
+import SeatLookup from "@/components/SeatLookup";
 import GuestWall from "@/components/GuestWall";
 import Footer from "@/components/Footer";
 
@@ -32,6 +33,7 @@ export default function Home() {
         <Gifts />
         <RSVP />
         <GuestWall />
+        <SeatLookup />
         <Footer />
       </main>
     </>

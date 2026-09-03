@@ -49,3 +49,33 @@ export async function PATCH(
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isDbConfigured || !db) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+  }
+  await ensureSchema();
+
+  const { id } = await params;
+
+  try {
+    // RSVPs are kept even if the guest is deleted — a submitted message
+    // shouldn't disappear just because the guest entry was removed; it just
+    // shows up as unlinked ("No invite link") in the submissions panel.
+    const result = await db.execute({ sql: "delete from guests where id = ?", args: [id] });
+    if (result.rowsAffected === 0) {
+      return NextResponse.json({ error: "Guest not found" }, { status: 404 });
+    }
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Delete failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

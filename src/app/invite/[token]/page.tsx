@@ -16,6 +16,7 @@ import DressCode from "@/components/DressCode";
 import Gifts from "@/components/Gifts";
 import RSVP from "@/components/RSVP";
 import SeatCard from "@/components/SeatCard";
+import SeatLookup from "@/components/SeatLookup";
 import GuestWall from "@/components/GuestWall";
 import Footer from "@/components/Footer";
 
@@ -74,6 +75,7 @@ export default async function InvitePage({ params }: Props) {
         <RSVP guestName={guest?.name} guestToken={token} />
         <SeatCard seatNumber={guest?.seat_number} />
         <GuestWall />
+        <SeatLookup />
         <Footer />
       </main>
     </>

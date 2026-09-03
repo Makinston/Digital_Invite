@@ -170,6 +170,60 @@ function SeatCell({
   );
 }
 
+function DeleteButton({
+  guestId,
+  guestName,
+  onDeleted,
+}: {
+  guestId: string;
+  guestName: string;
+  onDeleted: (id: string) => void;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  // Two-step confirm, no browser dialog — auto-resets after a few seconds
+  // in case of a stray click.
+  useEffect(() => {
+    if (!confirming) return;
+    const t = setTimeout(() => setConfirming(false), 4000);
+    return () => clearTimeout(t);
+  }, [confirming]);
+
+  const del = async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/guests/${guestId}`, { method: "DELETE" });
+      if (res.ok) onDeleted(guestId);
+    } finally {
+      setDeleting(false);
+      setConfirming(false);
+    }
+  };
+
+  if (confirming) {
+    return (
+      <button
+        onClick={del}
+        disabled={deleting}
+        className="text-[0.6rem] tracking-widest uppercase text-red-400 hover:text-red-300 disabled:opacity-40 whitespace-nowrap"
+      >
+        {deleting ? "Removing…" : `Confirm remove ${guestName.split(" ")[0]}?`}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setConfirming(true)}
+      className="text-[0.6rem] tracking-widest uppercase text-white/20 hover:text-red-400/80 transition-colors"
+      title={`Remove ${guestName}`}
+    >
+      Remove
+    </button>
+  );
+}
+
 export default function GuestDashboard() {
   const router = useRouter();
   const [guests, setGuests] = useState<GuestRow[]>([]);
@@ -225,6 +279,11 @@ export default function GuestDashboard() {
 
   const handleSeatSaved = (id: string, seat: string | null) => {
     setGuests((gs) => gs.map((g) => (g.id === id ? { ...g, seat_number: seat } : g)));
+  };
+
+  const handleGuestDeleted = (id: string) => {
+    setGuests((gs) => gs.filter((g) => g.id !== id));
+    setStats((s) => (s ? { ...s, total: s.total - 1 } : s));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -409,7 +468,8 @@ export default function GuestDashboard() {
                       <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">QR</th>
                       <th className="text-left py-3 pr-4 font-normal">Seat</th>
                       <th className="text-left py-3 pr-4 font-normal">Status</th>
-                      <th className="text-left py-3 font-normal hidden md:table-cell">Message</th>
+                      <th className="text-left py-3 pr-4 font-normal hidden md:table-cell">Message</th>
+                      <th className="text-left py-3 font-normal"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -451,8 +511,15 @@ export default function GuestDashboard() {
                             <td className="py-3 pr-4 whitespace-nowrap">
                               <StatusBadge rsvp={g.rsvp} />
                             </td>
-                            <td className="py-3 text-[0.7rem] text-white/30 max-w-50 truncate hidden md:table-cell">
+                            <td className="py-3 pr-4 text-[0.7rem] text-white/30 max-w-50 truncate hidden md:table-cell">
                               {g.rsvp?.message ?? "—"}
+                            </td>
+                            <td className="py-3 whitespace-nowrap text-right">
+                              <DeleteButton
+                                guestId={g.id}
+                                guestName={g.name}
+                                onDeleted={handleGuestDeleted}
+                              />
                             </td>
                           </motion.tr>
                         );
