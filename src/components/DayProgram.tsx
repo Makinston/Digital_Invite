@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { KenteDivider, KenteBackground } from "./AfricanPattern";
+import LocationMap from "./LocationMap";
 import { WEDDING } from "@/lib/constants";
 
 function ProgramRow({
@@ -131,6 +132,8 @@ export default function DayProgram() {
           >
             Open in Google Maps
           </a>
+
+          <LocationMap />
         </motion.div>
       </div>
     </section>

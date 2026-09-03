@@ -40,6 +40,40 @@ export const WEDDING = {
       closing: "Here's to the unexpected message that started it all, to the love we've built together, and to a lifetime of beautiful memories still waiting to be written. I love you so much. Cheers to us! 🥂❤️",
     },
   ],
+  /**
+   * ⚠️ Drafted from general knowledge of Lagos geography (Ikola is in
+   * Alimosho LGA, off the Lagos–Abeokuta Expressway near Ipaja/Ile-Epo).
+   * NOT verified turn-by-turn — please review and correct before this goes
+   * live so guests aren't sent the wrong way.
+   */
+  directions: [
+    {
+      from: "Lekki / Victoria Island",
+      route:
+        "Take the Lekki–Ikoyi Link Bridge or Ozumba Mbadiwe to the Third Mainland Bridge, continue to Oworonshoki, then the Apapa–Oshodi Expressway to Oshodi. From Oshodi, join the Lagos–Abeokuta Expressway heading toward Iyana-Ipaja, then Ile-Epo, and Ikola. Budget 1.5–2 hours depending on traffic.",
+    },
+    {
+      from: "Ikeja / Airport (MMIA)",
+      route:
+        "From Ikeja, head to Iyana-Ipaja and join the Lagos–Abeokuta Expressway heading toward Abule-Egba. Continue past Ile-Epo to Ikola. About 30–45 minutes.",
+    },
+    {
+      from: "Mainland (Yaba / Surulere)",
+      route:
+        "Take Funsho Williams Avenue or Western Avenue to Oshodi, then the Lagos–Abeokuta Expressway toward Iyana-Ipaja and Ile-Epo, continuing to Ikola. About 45–60 minutes.",
+    },
+    {
+      from: "Ajah / Sangotedo (Lekki-Epe axis)",
+      route:
+        "Follow the Lekki-Epe Expressway toward Ajah, then continue via the Lekki-Ikoyi Link Bridge/Ozumba Mbadiwe to the Third Mainland Bridge, then follow the same route as from Lekki above. This is a longer drive — allow 2+ hours.",
+    },
+    {
+      from: "Alimosho / Ipaja / Egbeda (local)",
+      route:
+        "You're closest to the venue — head to the Lagos–Abeokuta Expressway toward Ile-Epo, then Ikola. Under 20 minutes from most of Alimosho.",
+    },
+  ],
+
   dressCode: "Contact a member of the family for your Asoebi",
   gifts: {
     message:

@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { supabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabaseAdmin";
+import { isAdminRequest } from "@/lib/session";
 import { generateToken, slugify } from "@/lib/tokens";
 
-export async function GET() {
-  if (!isSupabaseConfigured || !supabase) {
+export async function GET(request: NextRequest) {
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSupabaseAdminConfigured || !supabaseAdmin) {
     return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
   }
 
-  const { data: guests, error: gErr } = await supabase
+  const { data: guests, error: gErr } = await supabaseAdmin
     .from("guests")
     .select("*")
     .order("created_at", { ascending: true });
 
-  const { data: rsvps, error: rErr } = await supabase
+  const { data: rsvps, error: rErr } = await supabaseAdmin
     .from("rsvps")
     .select("guest_token, attending, plus_one, name, created_at");
 
@@ -40,7 +45,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  if (!isSupabaseConfigured || !supabase) {
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSupabaseAdminConfigured || !supabaseAdmin) {
     return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
   }
 
@@ -58,7 +67,7 @@ export async function POST(request: NextRequest) {
       token: slugify(name) + "-" + generateToken(name, i),
     }));
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("guests")
     .upsert(rows, { onConflict: "token" })
     .select("name, token");

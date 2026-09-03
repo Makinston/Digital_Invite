@@ -5,6 +5,7 @@ export type Guest = {
   token: string;
   name: string;
   email?: string;
+  seat_number?: string | null;
   created_at: string;
 };
 
@@ -37,8 +38,12 @@ create table if not exists guests (
   token text unique not null,
   name text not null,
   email text,
+  seat_number text,
   created_at timestamptz default now()
 );
+
+-- Migrating an existing project? Run just this line:
+-- alter table guests add column if not exists seat_number text;
 
 create table if not exists rsvps (
   id uuid primary key default gen_random_uuid(),

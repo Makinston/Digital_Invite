@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface GuestRow {
@@ -8,6 +9,7 @@ interface GuestRow {
   token: string;
   name: string;
   email?: string;
+  seat_number?: string | null;
   created_at: string;
   rsvp: {
     attending: boolean;
@@ -85,7 +87,81 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+function SeatCell({
+  guestId,
+  seatNumber,
+  onSaved,
+}: {
+  guestId: string;
+  seatNumber?: string | null;
+  onSaved: (id: string, seat: string | null) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(seatNumber ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const trimmed = value.trim();
+    try {
+      const res = await fetch(`/api/guests/${guestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seat_number: trimmed || null }),
+      });
+      if (res.ok) {
+        onSaved(guestId, trimmed || null);
+      }
+    } finally {
+      setSaving(false);
+      setEditing(false);
+    }
+  };
+
+  if (!editing) {
+    return (
+      <button
+        onClick={() => {
+          setValue(seatNumber ?? "");
+          setEditing(true);
+        }}
+        className={`text-[0.7rem] px-2 py-1 rounded-sm border transition-colors ${
+          seatNumber
+            ? "border-yellow-500/30 text-yellow-400/90"
+            : "border-white/10 text-white/25 hover:text-white/50 hover:border-white/20"
+        }`}
+      >
+        {seatNumber || "assign"}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1">
+      <input
+        autoFocus
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") save();
+          if (e.key === "Escape") setEditing(false);
+        }}
+        placeholder="e.g. A12"
+        className="w-16 bg-white/5 border border-yellow-500/30 rounded px-2 py-1 text-xs text-white focus:outline-none"
+      />
+      <button
+        onClick={save}
+        disabled={saving}
+        className="text-[0.6rem] text-yellow-500/70 hover:text-yellow-500 disabled:opacity-40"
+      >
+        {saving ? "..." : "✓"}
+      </button>
+    </div>
+  );
+}
+
 export default function GuestDashboard() {
+  const router = useRouter();
   const [guests, setGuests] = useState<GuestRow[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -104,6 +180,10 @@ export default function GuestDashboard() {
     setError(null);
     try {
       const res = await fetch("/api/guests");
+      if (res.status === 401) {
+        router.replace("/dashboard/login");
+        return;
+      }
       if (!res.ok) {
         const j = await res.json();
         setError(j.error ?? "Failed to load");
@@ -120,8 +200,20 @@ export default function GuestDashboard() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial fetch-on-mount
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchData is redefined each render; only run once on mount
   }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.replace("/dashboard/login");
+    router.refresh();
+  };
+
+  const handleSeatSaved = (id: string, seat: string | null) => {
+    setGuests((gs) => gs.map((g) => (g.id === id ? { ...g, seat_number: seat } : g)));
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -179,12 +271,20 @@ export default function GuestDashboard() {
             Feyisayo &amp; Olawale
           </h1>
         </div>
-        <button
-          onClick={fetchData}
-          className="text-[0.65rem] tracking-widest uppercase border border-yellow-500/20 text-yellow-500/50 hover:text-yellow-500 hover:border-yellow-500/40 px-4 py-2 transition-colors rounded-sm"
-        >
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={fetchData}
+            className="text-[0.65rem] tracking-widest uppercase border border-yellow-500/20 text-yellow-500/50 hover:text-yellow-500 hover:border-yellow-500/40 px-4 py-2 transition-colors rounded-sm"
+          >
+            Refresh
+          </button>
+          <button
+            onClick={handleLogout}
+            className="text-[0.65rem] tracking-widest uppercase border border-red-400/20 text-red-400/50 hover:text-red-400 hover:border-red-400/40 px-4 py-2 transition-colors rounded-sm"
+          >
+            Log Out
+          </button>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
@@ -295,6 +395,7 @@ export default function GuestDashboard() {
                       <th className="text-left py-3 pr-4 font-normal">Name</th>
                       <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">Invite Link</th>
                       <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">QR</th>
+                      <th className="text-left py-3 pr-4 font-normal">Seat</th>
                       <th className="text-left py-3 pr-4 font-normal">Status</th>
                       <th className="text-left py-3 pr-4 font-normal hidden md:table-cell">Dietary</th>
                       <th className="text-left py-3 font-normal hidden md:table-cell">Message</th>
@@ -328,6 +429,13 @@ export default function GuestDashboard() {
                               >
                                 QR
                               </a>
+                            </td>
+                            <td className="py-3 pr-4 whitespace-nowrap">
+                              <SeatCell
+                                guestId={g.id}
+                                seatNumber={g.seat_number}
+                                onSaved={handleSeatSaved}
+                              />
                             </td>
                             <td className="py-3 pr-4 whitespace-nowrap">
                               <StatusBadge rsvp={g.rsvp} />
