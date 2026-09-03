@@ -8,7 +8,7 @@ export const WEDDING = {
   hashtag: "#FromDmToForever",
   rsvpDeadline: "September 19, 2026",
   venue: {
-    name: "Erly Moon Event Place",
+    name: "Early Moon Event Place",
     area: "Ikola, Lagos",
     mapUrl: "https://maps.google.com/?q=Ikola+Lagos",
   },

@@ -26,7 +26,7 @@ const greatVibes = Great_Vibes({
 export const metadata: Metadata = {
   title: "Feyisayo & Olawale — September 26, 2026",
   description:
-    "Join us as we celebrate the union of Feyisayo and Olawale. September 26, 2026 · Erly Moon Event Place, Ikola.",
+    "Join us as we celebrate the union of Feyisayo and Olawale. September 26, 2026 · Early Moon Event Place, Ikola.",
   openGraph: {
     title: "Feyisayo & Olawale — September 26, 2026",
     description: "You are cordially invited to our wedding celebration.",
