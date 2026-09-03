@@ -41,141 +41,216 @@ export const WEDDING = {
     },
   ],
   /**
-   * Researched from Ikola's confirmed road network (Ikola Road connects to
-   * the Lagos–Abeokuta Expressway via Meiran/Kollington Bus Stop, Iyana-Ipaja,
-   * or Egbeda Roundabout — Ikola sits in Alimosho LGA on the Ipaja/Ayobo axis).
-   * Traffic-dependent estimates — the "Live Directions" button on each card
-   * gives guests real-time Google Maps routing on top of this.
+   * Researched from Ikola's confirmed road/transit network:
+   * - Driving: Ikola Road connects to the Lagos–Abeokuta Expressway via
+   *   Meiran/Kollington Bus Stop, Iyana-Ipaja, or Egbeda Roundabout (Ikola
+   *   sits in Alimosho LGA on the Ipaja/Ayobo axis). Traffic-dependent
+   *   estimates — the "Get Live Directions" button gives real-time Google
+   *   Maps routing on top of this.
+   * - Transit: almost every part of Lagos funnels through Oshodi or
+   *   Iyana-Ipaja/Ipaja/Command Bus Stop, then a keke napep/local bus the
+   *   rest of the way to Ikola — sourced from public transport guides for
+   *   the area (fares are commercial-bus estimates and fluctuate with
+   *   traffic/fuel prices; confirm with the conductor before boarding).
    */
   directions: [
     {
       from: "Egbeda, Ikotun, Idimu & Alimosho",
       note: "Local — you're closest to the venue",
-      duration: "10–20 min",
-      mapQuery: "Egbeda, Lagos",
-      steps: [
-        "Head for Egbeda Roundabout, or straight into the Ipaja/Ayobo axis.",
-        "Join Ikola Road (via Egbeda–Idimu Road or Iyana-Ipaja).",
-        "Follow Ikola Road straight to the venue.",
-      ],
+      driving: {
+        duration: "10–20 min",
+        mapQuery: "Egbeda, Lagos",
+        summary: "Via Egbeda Roundabout or the Ipaja/Ayobo axis, straight onto Ikola Road.",
+      },
+      transit: {
+        duration: "20–35 min",
+        fare: "₦200 – ₦400",
+        steps: [
+          "From Egbeda Roundabout (or wherever you are locally), get a shared taxi or keke napep toward Ipaja/Ayobo.",
+          "Ask to be dropped at Ipaja or Command Bus Stop.",
+          "From there, take a keke napep or small bus calling \"Ikola!\" straight to the venue.",
+        ],
+      },
     },
     {
       from: "Agege & Abule-Egba",
       note: "",
-      duration: "20–30 min",
-      mapQuery: "Agege, Lagos",
-      steps: [
-        "Join the Lagos–Abeokuta Expressway at Pen Cinema, heading toward Abule-Egba.",
-        "Continue to Meiran / Kollington Bus Stop.",
-        "Branch onto Ikola Road and follow it to the venue.",
-      ],
+      driving: {
+        duration: "20–30 min",
+        mapQuery: "Agege, Lagos",
+        summary: "Lagos–Abeokuta Expressway at Pen Cinema toward Abule-Egba, then Meiran/Kollington onto Ikola Road.",
+      },
+      transit: {
+        duration: "30–45 min",
+        fare: "₦350 – ₦600",
+        steps: [
+          "Board a bus at Agege or Pen Cinema heading to \"Iyana-Ipaja\" or \"Abule-Egba.\"",
+          "Get down at Iyana-Ipaja, Ipaja, or Command Bus Stop.",
+          "Take a keke napep or small bus calling \"Ikola!\" the rest of the way.",
+        ],
+      },
     },
     {
       from: "Ikeja, GRA & the Airport (MMIA)",
       note: "",
-      duration: "25–40 min",
-      mapQuery: "Ikeja, Lagos",
-      steps: [
-        "From Ikeja/the airport, head to Agege Motor Road toward Iyana-Ipaja.",
-        "Join the Lagos–Abeokuta Expressway toward Abule-Egba.",
-        "Continue past Iyana-Ipaja to Meiran / Kollington Bus Stop.",
-        "Branch onto Ikola Road and follow it to the venue.",
-      ],
+      driving: {
+        duration: "25–40 min",
+        mapQuery: "Ikeja, Lagos",
+        summary: "Agege Motor Road to the Lagos–Abeokuta Expressway, past Iyana-Ipaja to Meiran, then onto Ikola Road.",
+      },
+      transit: {
+        duration: "1–1.5 hrs",
+        fare: "₦650 – ₦1,100",
+        steps: [
+          "From Ikeja Under Bridge/Computer Village, board a bus marked \"Agege\" or \"Pen Cinema\" (~₦300–400).",
+          "At Agege Market/Capitol Bus Stop, transfer to a bus heading to \"Iyana-Ipaja\" (~₦250–350).",
+          "At Iyana-Ipaja, take a keke napep or small bus calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Yaba, Ebute-Metta & the Mainland",
       note: "",
-      duration: "40–55 min",
-      mapQuery: "Yaba, Lagos",
-      steps: [
-        "From Sabo/Yaba, join Herbert Macaulay Way or Ikorodu Road toward Costain.",
-        "Continue via the Apapa–Oshodi Expressway (or Agege Motor Road through Mushin) to Oshodi.",
-        "At Oshodi, take the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "40–55 min",
+        mapQuery: "Yaba, Lagos",
+        summary: "Herbert Macaulay Way/Ikorodu Road to Oshodi, then the Oshodi–Abule-Egba Expressway to Meiran/Iyana-Ipaja and onto Ikola Road.",
+      },
+      transit: {
+        duration: "1–1.25 hrs",
+        fare: "₦600 – ₦1,000",
+        steps: [
+          "From Sabo/Yaba, board a bus to \"Oshodi.\"",
+          "At Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Surulere",
       note: "",
-      duration: "45–60 min",
-      mapQuery: "Surulere, Lagos",
-      steps: [
-        "Join Funsho Williams Avenue (or Western Avenue) toward Costain/Ijora.",
-        "Take the Apapa–Oshodi Expressway toward Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "45–60 min",
+        mapQuery: "Surulere, Lagos",
+        summary: "Funsho Williams Avenue to Costain/Oshodi, then the Oshodi–Abule-Egba Expressway to Meiran/Iyana-Ipaja and onto Ikola Road.",
+      },
+      transit: {
+        duration: "1–1.25 hrs",
+        fare: "₦600 – ₦1,000",
+        steps: [
+          "From Surulere, board a bus toward \"Costain,\" then transfer toward \"Oshodi.\"",
+          "At Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Gbagada, Ketu & Mile 12",
       note: "",
-      duration: "50–70 min",
-      mapQuery: "Gbagada, Lagos",
-      steps: [
-        "Join Ikorodu Road toward Anthony, then Oworonshoki.",
-        "Take the Apapa–Oworonshoki Expressway toward Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "50–70 min",
+        mapQuery: "Gbagada, Lagos",
+        summary: "Ikorodu Road to Oworonshoki, then the Apapa–Oshodi Expressway to Oshodi and on to Meiran/Iyana-Ipaja.",
+      },
+      transit: {
+        duration: "1–1.5 hrs",
+        fare: "₦700 – ₦1,100",
+        steps: [
+          "From Ketu/Ojota/Mile 12, board a BRT or bus toward \"Oshodi\" (~₦300–500).",
+          "At Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Festac, Amuwo-Odofin & Apapa",
       note: "",
-      duration: "50–70 min",
-      mapQuery: "Festac Town, Lagos",
-      steps: [
-        "From Festac/Amuwo-Odofin, join the Apapa–Oshodi Expressway via Mile 2 (from Apapa, first head to Mile 2).",
-        "Continue on the expressway to Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue past Abule-Egba to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "50–70 min",
+        mapQuery: "Festac Town, Lagos",
+        summary: "Apapa–Oshodi Expressway via Mile 2 to Oshodi, then to Meiran/Iyana-Ipaja and onto Ikola Road.",
+      },
+      transit: {
+        duration: "1–1.5 hrs",
+        fare: "₦600 – ₦1,000",
+        steps: [
+          "From Festac/Amuwo-Odofin (or via Mile 2 first if coming from Apapa), board a bus to \"Oshodi.\"",
+          "At Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Ikorodu",
       note: "",
-      duration: "1–1.5 hrs",
-      mapQuery: "Ikorodu, Lagos",
-      steps: [
-        "Join Ikorodu Road toward Ketu/Ojota, then continue to Anthony and Oworonshoki.",
-        "Take the Apapa–Oworonshoki Expressway toward Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "1–1.5 hrs",
+        mapQuery: "Ikorodu, Lagos",
+        summary: "Ikorodu Road through Ketu/Oworonshoki to Oshodi, then to Meiran/Iyana-Ipaja and onto Ikola Road.",
+      },
+      transit: {
+        duration: "1.5–2 hrs",
+        fare: "₦900 – ₦1,300",
+        steps: [
+          "Board the BRT at Ikorodu Garage heading to \"Oshodi\" (~₦680).",
+          "At Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Victoria Island, Ikoyi & Lekki Phase 1",
       note: "",
-      duration: "1.5–2 hrs",
-      mapQuery: "Victoria Island, Lagos",
-      steps: [
-        "Head to Ozumba Mbadiwe or the Lekki–Ikoyi Link Bridge, then join the Third Mainland Bridge.",
-        "At Oworonshoki, continue on the Apapa–Oshodi Expressway toward Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
-        "Continue past Abule-Egba to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
-      ],
+      driving: {
+        duration: "1.5–2 hrs",
+        mapQuery: "Victoria Island, Lagos",
+        summary: "Third Mainland Bridge to Oworonshoki, then the Apapa–Oshodi Expressway to Oshodi and on to Meiran/Iyana-Ipaja.",
+      },
+      transit: {
+        duration: "1.5–2 hrs",
+        fare: "₦1,250 – ₦1,800",
+        steps: [
+          "Go to CMS or Obalende Park and board a bus to \"Oshodi\" (~₦600–800).",
+          "At Oshodi, transfer to a bus heading to \"Iyana-Ipaja\" or \"Abule-Egba\" (~₦500–700).",
+          "From Iyana-Ipaja, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Ajah, Sangotedo & the Lekki-Epe Axis",
-      note: "",
-      duration: "2–2.5 hrs",
-      mapQuery: "Ajah, Lagos",
-      steps: [
-        "Join the Lekki-Epe Expressway toward Lekki Phase 1.",
-        "Continue via Ozumba Mbadiwe or the Lekki–Ikoyi Link Bridge to the Third Mainland Bridge.",
-        "From there, follow the same route as from Victoria Island (Oworonshoki → Oshodi → Oshodi–Abule-Egba Expressway → Meiran/Iyana-Ipaja → Ikola Road).",
-      ],
+      note: "The direct regulated bus makes this easier than it looks",
+      driving: {
+        duration: "2–2.5 hrs",
+        mapQuery: "Ajah, Lagos",
+        summary: "Lekki-Epe Expressway to the Third Mainland Bridge, then via Oworonshoki/Oshodi to Meiran/Iyana-Ipaja.",
+      },
+      transit: {
+        duration: "1.25–1.75 hrs",
+        fare: "~₦900 – ₦1,300",
+        steps: [
+          "At Ajah Terminal, board the regulated blue-and-white LAMATA bus signed \"Iyana-Ipaja\" — a direct route, no transfer at Oshodi needed (fare shown on board).",
+          "Alight at Iyana-Ipaja Bus Stop.",
+          "Take a keke napep or small bus calling \"Ikola!\" the rest of the way (~₦150–300).",
+        ],
+      },
     },
     {
       from: "Okokomaiko & Badagry",
       note: "",
-      duration: "1.5–2 hrs",
-      mapQuery: "Okokomaiko, Lagos",
-      steps: [
-        "Join the Lagos–Badagry Expressway heading toward Festac/Mile 2.",
-        "Continue on the Apapa–Oshodi Expressway toward Oshodi.",
-        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north to Meiran / Iyana-Ipaja.",
-        "Branch onto Ikola Road and follow it to the venue.",
-      ],
+      driving: {
+        duration: "1.5–2 hrs",
+        mapQuery: "Okokomaiko, Lagos",
+        summary: "Lagos–Badagry Expressway toward Festac/Mile 2, then Oshodi and on to Meiran/Iyana-Ipaja.",
+      },
+      transit: {
+        duration: "1.5–2 hrs",
+        fare: "₦900 – ₦1,300",
+        steps: [
+          "Board the BRT or a bus toward \"Mile 2\" along the Lagos–Badagry Expressway (~₦510 by BRT from Okokomaiko).",
+          "At Mile 2/Oshodi, transfer to a bus heading to \"Ipaja\" or \"Command\" (~₦400–600).",
+          "From Ipaja/Command Bus Stop, take a keke napep calling \"Ikola!\" to the venue (~₦150–300).",
+        ],
+      },
     },
   ],
 
