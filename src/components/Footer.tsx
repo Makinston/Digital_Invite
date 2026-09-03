@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { KenteBackground, AdinkraSymbol } from "./AfricanPattern";
+import SeatLookup from "./SeatLookup";
 import { WEDDING } from "@/lib/constants";
 
 export default function Footer() {
@@ -44,6 +45,10 @@ export default function Footer() {
           <p className="font-script text-xl text-gold/40">
             {WEDDING.hashtag}
           </p>
+
+          <div className="mt-10">
+            <SeatLookup />
+          </div>
         </motion.div>
       </div>
     </footer>
