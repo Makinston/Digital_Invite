@@ -37,7 +37,7 @@ export default function Gifts() {
           </div>
 
           <motion.p
-            className="font-display text-[clamp(1rem,2.2vw,1.3rem)] text-offwhite/55 font-light italic leading-relaxed mb-10"
+            className="font-display text-[clamp(1rem,2.2vw,1.3rem)] text-offwhite/75 font-light italic leading-relaxed mb-10"
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}

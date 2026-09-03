@@ -47,17 +47,27 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
   );
 }
 
+const ZERO: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
 export default function Countdown() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calcTimeLeft());
+  // Starts `null` on both server and client — calcTimeLeft() depends on
+  // Date.now(), which differs between server-render and client-hydration
+  // instants and would otherwise cause a hydration mismatch. The real
+  // countdown (and the "We are married!" flip) is filled in after mount,
+  // as a plain client-side update rather than part of hydration.
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-10%" });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with the system clock (external source) on mount
+    setTimeLeft(calcTimeLeft());
     const tick = setInterval(() => setTimeLeft(calcTimeLeft()), 1000);
     return () => clearInterval(tick);
   }, []);
 
-  const isPast = Object.values(timeLeft).every((v) => v === 0);
+  const display = timeLeft ?? ZERO;
+  const isPast = timeLeft !== null && Object.values(timeLeft).every((v) => v === 0);
 
   return (
     <section
@@ -90,13 +100,13 @@ export default function Countdown() {
 
         {!isPast && (
           <div className="flex items-start justify-center gap-1.5 sm:gap-4 md:gap-8 w-full">
-            <TimeUnit value={timeLeft.days} label="Days" />
+            <TimeUnit value={display.days} label="Days" />
             <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
-            <TimeUnit value={timeLeft.hours} label="Hours" />
+            <TimeUnit value={display.hours} label="Hours" />
             <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
-            <TimeUnit value={timeLeft.minutes} label="Minutes" />
+            <TimeUnit value={display.minutes} label="Minutes" />
             <div className="font-display text-gold/30 text-lg sm:text-4xl mt-1.5 sm:mt-4 shrink-0">:</div>
-            <TimeUnit value={timeLeft.seconds} label="Seconds" />
+            <TimeUnit value={display.seconds} label="Seconds" />
           </div>
         )}
 

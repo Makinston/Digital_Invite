@@ -3,21 +3,42 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Only played in full once per browser session — repeat visits (checking your
+// invite again, refreshing) skip straight to the content instead of sitting
+// through the envelope reveal again.
+const SESSION_KEY = "fo-preloader-seen";
+
 export default function Preloader() {
   const [flapOpen, setFlapOpen] = useState(false);
   const [cardRise, setCardRise] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [skip, setSkip] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setFlapOpen(true), 1000);
-    const t2 = setTimeout(() => setCardRise(true), 1700);
-    const t3 = setTimeout(() => setVisible(false), 3200);
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(SESSION_KEY) === "1";
+      sessionStorage.setItem(SESSION_KEY, "1");
+    } catch {
+      /* private browsing / storage blocked — just play it every time */
+    }
+
+    if (seen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with sessionStorage (external system) read on mount
+      setSkip(true);
+      setVisible(false);
+      return;
+    }
+
+    const t1 = setTimeout(() => setFlapOpen(true), 800);
+    const t2 = setTimeout(() => setCardRise(true), 1400);
+    const t3 = setTimeout(() => setVisible(false), 2500);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && !skip && (
         <motion.div
           className="fixed inset-0 z-[100] bg-deep flex items-center justify-center"
           exit={{ opacity: 0 }}

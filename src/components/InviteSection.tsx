@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { KenteDivider, KenteBackground } from "./AfricanPattern";
 import { WEDDING } from "@/lib/constants";
@@ -8,6 +9,7 @@ import { WEDDING } from "@/lib/constants";
 export default function InviteSection() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
+  const [photoErrored, setPhotoErrored] = useState(false);
 
   return (
     <section
@@ -30,6 +32,24 @@ export default function InviteSection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9 }}
         >
+          {!photoErrored && (
+            <motion.div
+              className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 rounded-full overflow-hidden border-2 border-gold/40 shadow-[0_0_0_6px_rgba(201,162,39,0.08)]"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
+              <Image
+                src="/images/couple/photo-2.jpeg"
+                alt={WEDDING.coupleDisplay}
+                fill
+                sizes="160px"
+                className="object-cover"
+                onError={() => setPhotoErrored(true)}
+              />
+            </motion.div>
+          )}
+
           <p className="font-body text-[0.6rem] tracking-[0.45em] uppercase text-gold/40 mb-5">
             With joy in our hearts
           </p>

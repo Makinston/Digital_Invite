@@ -50,7 +50,7 @@ function ToastCard({
       {/* Toast body */}
       <div className="space-y-4">
         {toast.text.split("\n\n").map((para, i) => (
-          <p key={i} className="font-body text-sm sm:text-base text-offwhite/65 leading-[1.85]">
+          <p key={i} className="font-body text-sm sm:text-base text-offwhite/80 leading-[1.85]">
             {para}
           </p>
         ))}

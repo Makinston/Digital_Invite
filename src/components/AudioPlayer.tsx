@@ -59,7 +59,10 @@ export default function AudioPlayer() {
 
   return (
     <>
-      <audio ref={audioRef} src={musicUrl} loop preload="auto" />
+      {/* preload="metadata" avoids downloading the full track for visitors whose
+          browser blocks autoplay anyway (the common case on mobile) — playback
+          still starts instantly once a gesture or successful autoplay fires */}
+      <audio ref={audioRef} src={musicUrl} loop preload="metadata" />
       <AnimatePresence>
         {visible && (
           <motion.button

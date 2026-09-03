@@ -41,36 +41,141 @@ export const WEDDING = {
     },
   ],
   /**
-   * ⚠️ Drafted from general knowledge of Lagos geography (Ikola is in
-   * Alimosho LGA, off the Lagos–Abeokuta Expressway near Ipaja/Ile-Epo).
-   * NOT verified turn-by-turn — please review and correct before this goes
-   * live so guests aren't sent the wrong way.
+   * Researched from Ikola's confirmed road network (Ikola Road connects to
+   * the Lagos–Abeokuta Expressway via Meiran/Kollington Bus Stop, Iyana-Ipaja,
+   * or Egbeda Roundabout — Ikola sits in Alimosho LGA on the Ipaja/Ayobo axis).
+   * Traffic-dependent estimates — the "Live Directions" button on each card
+   * gives guests real-time Google Maps routing on top of this.
    */
   directions: [
     {
-      from: "Lekki / Victoria Island",
-      route:
-        "Take the Lekki–Ikoyi Link Bridge or Ozumba Mbadiwe to the Third Mainland Bridge, continue to Oworonshoki, then the Apapa–Oshodi Expressway to Oshodi. From Oshodi, join the Lagos–Abeokuta Expressway heading toward Iyana-Ipaja, then Ile-Epo, and Ikola. Budget 1.5–2 hours depending on traffic.",
+      from: "Egbeda, Ikotun, Idimu & Alimosho",
+      note: "Local — you're closest to the venue",
+      duration: "10–20 min",
+      mapQuery: "Egbeda, Lagos",
+      steps: [
+        "Head for Egbeda Roundabout, or straight into the Ipaja/Ayobo axis.",
+        "Join Ikola Road (via Egbeda–Idimu Road or Iyana-Ipaja).",
+        "Follow Ikola Road straight to the venue.",
+      ],
     },
     {
-      from: "Ikeja / Airport (MMIA)",
-      route:
-        "From Ikeja, head to Iyana-Ipaja and join the Lagos–Abeokuta Expressway heading toward Abule-Egba. Continue past Ile-Epo to Ikola. About 30–45 minutes.",
+      from: "Agege & Abule-Egba",
+      note: "",
+      duration: "20–30 min",
+      mapQuery: "Agege, Lagos",
+      steps: [
+        "Join the Lagos–Abeokuta Expressway at Pen Cinema, heading toward Abule-Egba.",
+        "Continue to Meiran / Kollington Bus Stop.",
+        "Branch onto Ikola Road and follow it to the venue.",
+      ],
     },
     {
-      from: "Mainland (Yaba / Surulere)",
-      route:
-        "Take Funsho Williams Avenue or Western Avenue to Oshodi, then the Lagos–Abeokuta Expressway toward Iyana-Ipaja and Ile-Epo, continuing to Ikola. About 45–60 minutes.",
+      from: "Ikeja, GRA & the Airport (MMIA)",
+      note: "",
+      duration: "25–40 min",
+      mapQuery: "Ikeja, Lagos",
+      steps: [
+        "From Ikeja/the airport, head to Agege Motor Road toward Iyana-Ipaja.",
+        "Join the Lagos–Abeokuta Expressway toward Abule-Egba.",
+        "Continue past Iyana-Ipaja to Meiran / Kollington Bus Stop.",
+        "Branch onto Ikola Road and follow it to the venue.",
+      ],
     },
     {
-      from: "Ajah / Sangotedo (Lekki-Epe axis)",
-      route:
-        "Follow the Lekki-Epe Expressway toward Ajah, then continue via the Lekki-Ikoyi Link Bridge/Ozumba Mbadiwe to the Third Mainland Bridge, then follow the same route as from Lekki above. This is a longer drive — allow 2+ hours.",
+      from: "Yaba, Ebute-Metta & the Mainland",
+      note: "",
+      duration: "40–55 min",
+      mapQuery: "Yaba, Lagos",
+      steps: [
+        "From Sabo/Yaba, join Herbert Macaulay Way or Ikorodu Road toward Costain.",
+        "Continue via the Apapa–Oshodi Expressway (or Agege Motor Road through Mushin) to Oshodi.",
+        "At Oshodi, take the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
     },
     {
-      from: "Alimosho / Ipaja / Egbeda (local)",
-      route:
-        "You're closest to the venue — head to the Lagos–Abeokuta Expressway toward Ile-Epo, then Ikola. Under 20 minutes from most of Alimosho.",
+      from: "Surulere",
+      note: "",
+      duration: "45–60 min",
+      mapQuery: "Surulere, Lagos",
+      steps: [
+        "Join Funsho Williams Avenue (or Western Avenue) toward Costain/Ijora.",
+        "Take the Apapa–Oshodi Expressway toward Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
+    },
+    {
+      from: "Gbagada, Ketu & Mile 12",
+      note: "",
+      duration: "50–70 min",
+      mapQuery: "Gbagada, Lagos",
+      steps: [
+        "Join Ikorodu Road toward Anthony, then Oworonshoki.",
+        "Take the Apapa–Oworonshoki Expressway toward Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
+    },
+    {
+      from: "Festac, Amuwo-Odofin & Apapa",
+      note: "",
+      duration: "50–70 min",
+      mapQuery: "Festac Town, Lagos",
+      steps: [
+        "From Festac/Amuwo-Odofin, join the Apapa–Oshodi Expressway via Mile 2 (from Apapa, first head to Mile 2).",
+        "Continue on the expressway to Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue past Abule-Egba to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
+    },
+    {
+      from: "Ikorodu",
+      note: "",
+      duration: "1–1.5 hrs",
+      mapQuery: "Ikorodu, Lagos",
+      steps: [
+        "Join Ikorodu Road toward Ketu/Ojota, then continue to Anthony and Oworonshoki.",
+        "Take the Apapa–Oworonshoki Expressway toward Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
+    },
+    {
+      from: "Victoria Island, Ikoyi & Lekki Phase 1",
+      note: "",
+      duration: "1.5–2 hrs",
+      mapQuery: "Victoria Island, Lagos",
+      steps: [
+        "Head to Ozumba Mbadiwe or the Lekki–Ikoyi Link Bridge, then join the Third Mainland Bridge.",
+        "At Oworonshoki, continue on the Apapa–Oshodi Expressway toward Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north.",
+        "Continue past Abule-Egba to Meiran / Iyana-Ipaja, then branch onto Ikola Road.",
+      ],
+    },
+    {
+      from: "Ajah, Sangotedo & the Lekki-Epe Axis",
+      note: "",
+      duration: "2–2.5 hrs",
+      mapQuery: "Ajah, Lagos",
+      steps: [
+        "Join the Lekki-Epe Expressway toward Lekki Phase 1.",
+        "Continue via Ozumba Mbadiwe or the Lekki–Ikoyi Link Bridge to the Third Mainland Bridge.",
+        "From there, follow the same route as from Victoria Island (Oworonshoki → Oshodi → Oshodi–Abule-Egba Expressway → Meiran/Iyana-Ipaja → Ikola Road).",
+      ],
+    },
+    {
+      from: "Okokomaiko & Badagry",
+      note: "",
+      duration: "1.5–2 hrs",
+      mapQuery: "Okokomaiko, Lagos",
+      steps: [
+        "Join the Lagos–Badagry Expressway heading toward Festac/Mile 2.",
+        "Continue on the Apapa–Oshodi Expressway toward Oshodi.",
+        "At Oshodi, join the Oshodi–Abule-Egba Expressway heading north to Meiran / Iyana-Ipaja.",
+        "Branch onto Ikola Road and follow it to the venue.",
+      ],
     },
   ],
 

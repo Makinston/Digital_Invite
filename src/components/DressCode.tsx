@@ -28,7 +28,7 @@ export default function DressCode() {
           </div>
 
           <motion.p
-            className="font-display text-[clamp(1.1rem,2.5vw,1.5rem)] text-charcoal/70 font-light italic leading-relaxed"
+            className="font-display text-[clamp(1.1rem,2.5vw,1.5rem)] text-charcoal/85 font-light italic leading-relaxed"
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
