@@ -33,6 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# local SQLite dev database (when TURSO_DATABASE_URL=file:./dev.db)
+*.db
+*.db-wal
+*.db-shm
+
 # vercel
 .vercel
 

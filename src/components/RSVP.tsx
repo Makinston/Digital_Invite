@@ -177,6 +177,16 @@ export default function RSVP({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...final, guestToken }),
       });
+
+      // Let the Love Wall know right away, so this message shows up there
+      // without needing a page refresh.
+      if (final.message && final.name) {
+        window.dispatchEvent(
+          new CustomEvent("rsvp:new-message", {
+            detail: { name: final.name, message: final.message },
+          })
+        );
+      }
     } catch {
       /* silent */
     }

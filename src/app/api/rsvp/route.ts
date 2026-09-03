@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { db, isDbConfigured, ensureSchema } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -9,18 +9,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  if (isSupabaseConfigured && supabase) {
-    const { error } = await supabase.from("rsvps").insert({
-      guest_token: guestToken ?? null,
-      name,
-      whatsapp: whatsapp ?? null,
-      attending,
-      plus_one: plusOne ?? false,
-      message: message ?? null,
-    });
-
-    if (error) {
-      console.error("Supabase RSVP error:", error.message);
+  if (isDbConfigured && db) {
+    await ensureSchema();
+    try {
+      await db.execute({
+        sql: `insert into rsvps (id, guest_token, name, whatsapp, attending, plus_one, message)
+              values (?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          crypto.randomUUID(),
+          guestToken ?? null,
+          name,
+          whatsapp ?? null,
+          attending ? 1 : 0,
+          plusOne ? 1 : 0,
+          message ?? null,
+        ],
+      });
+    } catch (err) {
+      console.error("RSVP insert error:", err instanceof Error ? err.message : err);
     }
   }
 

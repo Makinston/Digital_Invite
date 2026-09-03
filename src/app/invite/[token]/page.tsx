@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { db, isDbConfigured, ensureSchema, type Guest } from "@/lib/db";
 import { WEDDING } from "@/lib/constants";
 import Preloader from "@/components/Preloader";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -23,14 +23,22 @@ interface Props {
   params: Promise<{ token: string }>;
 }
 
-async function getGuest(token: string) {
-  if (!isSupabaseConfigured || !supabase) return null;
-  const { data } = await supabase
-    .from("guests")
-    .select("name, token, seat_number")
-    .eq("token", token)
-    .single();
-  return data;
+async function getGuest(
+  token: string
+): Promise<Pick<Guest, "name" | "token" | "seat_number"> | null> {
+  if (!isDbConfigured || !db) return null;
+  await ensureSchema();
+  const result = await db.execute({
+    sql: "select name, token, seat_number from guests where token = ? limit 1",
+    args: [token],
+  });
+  const row = result.rows[0];
+  if (!row) return null;
+  return {
+    name: row.name as string,
+    token: row.token as string,
+    seat_number: row.seat_number as string | null,
+  };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -46,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InvitePage({ params }: Props) {
   const { token } = await params;
   const guest = await getGuest(token);
-  if (isSupabaseConfigured && !guest) notFound();
+  if (isDbConfigured && !guest) notFound();
 
   return (
     <>

@@ -14,10 +14,20 @@ interface GuestRow {
   rsvp: {
     attending: boolean;
     plus_one: boolean;
-    dietary?: string;
-    message?: string;
+    message?: string | null;
     created_at: string;
   } | null;
+}
+
+interface RsvpSubmission {
+  id: string;
+  guest_token: string | null;
+  name: string;
+  whatsapp: string | null;
+  attending: boolean;
+  plus_one: boolean;
+  message: string | null;
+  created_at: string;
 }
 
 interface Stats {
@@ -163,6 +173,7 @@ function SeatCell({
 export default function GuestDashboard() {
   const router = useRouter();
   const [guests, setGuests] = useState<GuestRow[]>([]);
+  const [rsvps, setRsvps] = useState<RsvpSubmission[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -190,9 +201,10 @@ export default function GuestDashboard() {
         setLoading(false);
         return;
       }
-      const { guests: g, stats: s } = await res.json();
+      const { guests: g, stats: s, rsvps: r } = await res.json();
       setGuests(g);
       setStats(s);
+      setRsvps(r ?? []);
     } catch {
       setError("Could not reach server");
     }
@@ -375,8 +387,8 @@ export default function GuestDashboard() {
           {/* Error / loading */}
           {error && (
             <div className="border border-red-500/20 text-red-400/70 text-sm p-4 rounded-sm mb-4">
-              {error === "Supabase not configured"
-                ? "Supabase is not configured yet. Add your credentials to .env.local to enable the dashboard."
+              {error === "Database not configured"
+                ? "The database isn't configured yet. Add TURSO_DATABASE_URL and TURSO_AUTH_TOKEN to .env.local to enable the dashboard."
                 : error}
             </div>
           )}
@@ -397,7 +409,6 @@ export default function GuestDashboard() {
                       <th className="text-left py-3 pr-4 font-normal hidden sm:table-cell">QR</th>
                       <th className="text-left py-3 pr-4 font-normal">Seat</th>
                       <th className="text-left py-3 pr-4 font-normal">Status</th>
-                      <th className="text-left py-3 pr-4 font-normal hidden md:table-cell">Dietary</th>
                       <th className="text-left py-3 font-normal hidden md:table-cell">Message</th>
                     </tr>
                   </thead>
@@ -440,9 +451,6 @@ export default function GuestDashboard() {
                             <td className="py-3 pr-4 whitespace-nowrap">
                               <StatusBadge rsvp={g.rsvp} />
                             </td>
-                            <td className="py-3 pr-4 text-[0.7rem] text-white/30 hidden md:table-cell">
-                              {g.rsvp?.dietary ?? "—"}
-                            </td>
                             <td className="py-3 text-[0.7rem] text-white/30 max-w-50 truncate hidden md:table-cell">
                               {g.rsvp?.message ?? "—"}
                             </td>
@@ -465,6 +473,58 @@ export default function GuestDashboard() {
               </p>
             </>
           )}
+        </div>
+
+        {/* RSVP submissions & messages — includes guests without a personalized link */}
+        <div className="border border-yellow-500/15 rounded-sm p-6 bg-white/2">
+          <h2 className="text-sm font-medium text-yellow-400/80 mb-1 tracking-wider uppercase">
+            RSVP Submissions &amp; Messages
+          </h2>
+          <p className="text-[0.7rem] text-white/30 mb-4">
+            Every response, in order — including anyone who RSVP&apos;d from the general site link
+            rather than a personalized invite.
+          </p>
+
+          {!loading && !error && rsvps.length === 0 && (
+            <p className="text-center text-white/20 text-sm py-8">No RSVP submissions yet.</p>
+          )}
+
+          <div className="space-y-3 max-h-[32rem] overflow-y-auto pr-1">
+            <AnimatePresence>
+              {rsvps.map((r, i) => (
+                <motion.div
+                  key={r.id}
+                  className="border border-white/8 rounded-sm p-4"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.015 }}
+                >
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <p className="text-sm text-white/80 font-medium">{r.name}</p>
+                    <StatusBadge rsvp={r} />
+                    {!r.guest_token && (
+                      <span className="text-[0.55rem] tracking-widest uppercase text-white/30 border border-white/10 px-2 py-0.5 rounded-full">
+                        No invite link
+                      </span>
+                    )}
+                    <span className="text-[0.6rem] text-white/20 sm:ml-auto">
+                      {new Date(r.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  {r.whatsapp && (
+                    <p className="text-[0.65rem] text-white/35 mb-2">WhatsApp: {r.whatsapp}</p>
+                  )}
+                  {r.message ? (
+                    <p className="font-['Cormorant_Garamond',serif] italic text-white/65 text-base leading-relaxed">
+                      &ldquo;{r.message}&rdquo;
+                    </p>
+                  ) : (
+                    <p className="text-[0.7rem] text-white/20">No message left.</p>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

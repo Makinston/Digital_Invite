@@ -1,23 +1,19 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { KenteDivider } from "./AfricanPattern";
 
-const MESSAGES = [
-  { name: "Adesola B.", message: "Wishing you both a lifetime of love and laughter! 💛" },
-  { name: "Chukwuemeka O.", message: "So honoured to witness this beautiful union. God bless you both!" },
-  { name: "Fatimah A.", message: "Feyisayo, you're glowing! Wale, you're one lucky man 😄🙏" },
-  { name: "Ngozi & Dami", message: "Our hearts are full. See you on the big day!" },
-  { name: "Tunde K.", message: "Two families becoming one. What a blessing 🙌" },
-  { name: "Amaka I.", message: "Already crying and it hasn't even started yet 😭❤️" },
-  { name: "Seun F.", message: "Love like this deserves to be celebrated! So happy for you two 💍" },
-  { name: "Bisi & Kola", message: "From DMs to forever — what a story! Congratulations 🥂" },
-];
+interface WallMessage {
+  name: string;
+  message: string;
+  created_at: string;
+}
 
-// Fixed per-note values to avoid hydration mismatch
-const ROTATIONS   = [-7, 4, -5, 8, -3, 6, -9, 3];
-const NOTE_COLORS = ["#FFF8E7", "#FAF7F0", "#FFF3D4", "#F5F0E8", "#FFF8E7", "#FAF7F0", "#FFF3D4", "#F5F0E8"];
+// Fixed per-card styling values, cycled independently of how many real
+// messages there are — keeps the cork-board look consistent either way.
+const ROTATIONS    = [-7, 4, -5, 8, -3, 6, -9, 3];
+const NOTE_COLORS  = ["#FFF8E7", "#FAF7F0", "#FFF3D4", "#F5F0E8", "#FFF8E7", "#FAF7F0", "#FFF3D4", "#F5F0E8"];
 const NOTE_HEIGHTS = [170, 158, 185, 163, 175, 155, 180, 165];
 const NOTE_WIDTHS  = [210, 230, 200, 240, 215, 225, 205, 235];
 
@@ -46,7 +42,7 @@ function NoteCard({
   message: string;
   index: number;
 }) {
-  const mod = index % MESSAGES.length;
+  const mod = index % ROTATIONS.length;
   const rotation = ROTATIONS[mod];
   const bg = NOTE_COLORS[mod];
   const h = NOTE_HEIGHTS[mod];
@@ -62,6 +58,8 @@ function NoteCard({
         rotate: rotation,
         boxShadow: "2px 4px 18px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.25)",
       }}
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
       whileHover={{ rotate: rotation * 0.4, scale: 1.04, zIndex: 10 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
@@ -80,7 +78,7 @@ function NoteCard({
 
       {/* Message text */}
       <p
-        className="font-display italic leading-snug text-charcoal/80"
+        className="font-display italic leading-snug text-charcoal/80 overflow-hidden"
         style={{ fontSize: message.length > 50 ? 15 : 17 }}
       >
         {message}
@@ -100,9 +98,42 @@ function NoteCard({
 export default function GuestWall() {
   const titleRef = useRef<HTMLDivElement>(null);
   const inView = useInView(titleRef, { once: true, margin: "-10%" });
+  const [messages, setMessages] = useState<WallMessage[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
-  // Duplicate for seamless infinite loop
-  const loop = [...MESSAGES, ...MESSAGES];
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/wall")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setMessages(data.messages ?? []);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoaded(true);
+      });
+
+    // The RSVP chat box dispatches this the moment someone submits a
+    // message, so their own note shows up here right away — no refresh.
+    const onNewMessage = (e: Event) => {
+      const detail = (e as CustomEvent<{ name: string; message: string }>).detail;
+      if (!detail?.message) return;
+      setMessages((prev) => [
+        { name: detail.name, message: detail.message, created_at: new Date().toISOString() },
+        ...prev,
+      ]);
+    };
+    window.addEventListener("rsvp:new-message", onNewMessage);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("rsvp:new-message", onNewMessage);
+    };
+  }, []);
+
+  // Duplicate for a seamless loop once there's enough to be worth animating.
+  const loop = messages.length >= 3 ? [...messages, ...messages] : messages;
 
   return (
     <section id="wall" className="relative bg-deep py-20 md:py-28 overflow-hidden">
@@ -129,21 +160,28 @@ export default function GuestWall() {
           </div>
         </motion.div>
 
-        {/* Infinite note carousel */}
-        <div className="overflow-hidden py-10">
-          <motion.div
-            className="flex gap-8 items-center"
-            style={{ width: "max-content" }}
-            animate={{ x: [0, "-50%"] }}
-            transition={{
-              x: { duration: 36, ease: "linear", repeat: Infinity, repeatType: "loop" },
-            }}
-          >
-            {loop.map((m, i) => (
-              <NoteCard key={i} name={m.name} message={m.message} index={i} />
-            ))}
-          </motion.div>
-        </div>
+        {loaded && messages.length === 0 && (
+          <p className="text-center font-display text-lg text-offwhite/30 italic px-6 py-10">
+            No messages yet — be the first to leave one below. 💛
+          </p>
+        )}
+
+        {messages.length > 0 && (
+          <div className="overflow-hidden py-10">
+            <motion.div
+              className="flex gap-8 items-center"
+              style={{ width: "max-content" }}
+              animate={loop.length > messages.length ? { x: [0, "-50%"] } : undefined}
+              transition={{
+                x: { duration: 36, ease: "linear", repeat: Infinity, repeatType: "loop" },
+              }}
+            >
+              {loop.map((m, i) => (
+                <NoteCard key={`${m.created_at}-${i}`} name={m.name} message={m.message} index={i} />
+              ))}
+            </motion.div>
+          </div>
+        )}
 
         <motion.p
           className="text-center font-body text-[0.6rem] tracking-[0.3em] uppercase text-gold/25 mt-8 px-6"

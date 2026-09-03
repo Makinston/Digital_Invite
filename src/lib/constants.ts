@@ -6,7 +6,7 @@ export const WEDDING = {
   date: "26 September 2026",
   dateISO: "2026-09-26T08:00:00",
   hashtag: "#FromDmToForever",
-  rsvpDeadline: "September 5, 2026",
+  rsvpDeadline: "September 19, 2026",
   venue: {
     name: "Erly Moon Event Place",
     area: "Ikola, Lagos",
@@ -15,7 +15,7 @@ export const WEDDING = {
   dayProgram: [
     { time: "8:00 AM", event: "Church Service" },
     { time: "10:00 AM", event: "Guest Arrival" },
-    { time: "11:00 AM", event: "Engagement" },
+    { time: "10:30 AM", event: "Engagement" },
     { time: "12:00 PM", event: "Reception" },
   ],
   howWeMet: {

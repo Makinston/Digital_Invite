@@ -92,7 +92,7 @@ export default function Directions() {
             Getting There
           </p>
           <h2 className="font-script text-[clamp(2.5rem,6vw,4rem)] text-offwhite">
-            How To Find Us
+            Locate The Venue
           </h2>
           <div className="mt-6 max-w-xs mx-auto mb-5">
             <KenteDivider />

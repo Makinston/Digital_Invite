@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabaseAdmin";
+import { db, isDbConfigured, ensureSchema } from "@/lib/db";
 import { isAdminRequest } from "@/lib/session";
 
 export async function PATCH(
@@ -10,9 +10,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!isSupabaseAdminConfigured || !supabaseAdmin) {
-    return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
+  if (!isDbConfigured || !db) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
   }
+  await ensureSchema();
 
   const { id } = await params;
   const body = await request.json().catch(() => null);
@@ -25,16 +26,26 @@ export async function PATCH(
     );
   }
 
-  const { data, error } = await supabaseAdmin
-    .from("guests")
-    .update({ seat_number: seatNumber?.trim() || null })
-    .eq("id", id)
-    .select("id, seat_number")
-    .single();
+  const cleaned = typeof seatNumber === "string" ? seatNumber.trim() || null : null;
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    await db.execute({
+      sql: "update guests set seat_number = ? where id = ?",
+      args: [cleaned, id],
+    });
+    const result = await db.execute({
+      sql: "select id, seat_number from guests where id = ?",
+      args: [id],
+    });
+    const row = result.rows[0];
+    if (!row) {
+      return NextResponse.json({ error: "Guest not found" }, { status: 404 });
+    }
+    return NextResponse.json({
+      guest: { id: row.id as string, seat_number: row.seat_number as string | null },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Update failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ guest: data });
 }
