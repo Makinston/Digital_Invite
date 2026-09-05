@@ -129,26 +129,21 @@ function SeatLookupModal({ onClose }: { onClose: () => void }) {
         )}
 
         {guests && guests.length > 0 && (
-          <>
-            <p className="text-[0.6rem] tracking-widest uppercase text-offwhite/25 mb-2">
-              {filtered.length} of {guests.length} guests
-            </p>
-            <div className="space-y-2 overflow-y-auto pr-1">
-              {filtered.map((g, i) => (
-                <SeatRow
-                  key={i}
-                  name={g.name}
-                  seat_number={g.seat_number}
-                  color={g.seat_number ? colorMap.get(seatTable(g.seat_number)) : undefined}
-                />
-              ))}
-              {filtered.length === 0 && (
-                <p className="text-offwhite/40 text-sm py-6 text-center">
-                  No guest found by that name. Try a different spelling, or check with the couple.
-                </p>
-              )}
-            </div>
-          </>
+          <div className="space-y-2 overflow-y-auto pr-1">
+            {filtered.map((g, i) => (
+              <SeatRow
+                key={i}
+                name={g.name}
+                seat_number={g.seat_number}
+                color={g.seat_number ? colorMap.get(seatTable(g.seat_number)) : undefined}
+              />
+            ))}
+            {filtered.length === 0 && (
+              <p className="text-offwhite/40 text-sm py-6 text-center">
+                No guest found by that name. Try a different spelling, or check with the couple.
+              </p>
+            )}
+          </div>
         )}
       </motion.div>
     </motion.div>
