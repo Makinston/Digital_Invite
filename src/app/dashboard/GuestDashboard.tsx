@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { compareSeatNumbers, seatTable, buildTableColorMap } from "@/lib/seating";
 
 interface GuestRow {
   id: string;
@@ -224,6 +225,47 @@ function DeleteButton({
   );
 }
 
+// Collapses long messages to the same height as short ones by default, with
+// a small toggle to read the rest. Whether a message actually needs the
+// toggle depends on the card's width, not just character count (a 150-char
+// message can fit on 3 lines in a wide card and not in a narrow one) — so
+// this measures real overflow in the DOM rather than guessing from length.
+function MessageBlock({ message }: { message: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const ref = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Measured once, while still clamped (expanded starts false) — a
+    // one-time layout read of the rendered DOM, not state derived from
+    // props/state.
+    setOverflows(el.scrollHeight > el.clientHeight + 1);
+  }, [message]);
+
+  return (
+    <div>
+      <p
+        ref={ref}
+        className={`font-['Cormorant_Garamond',serif] italic text-white/65 text-base leading-relaxed ${
+          !expanded ? "line-clamp-3" : ""
+        }`}
+      >
+        &ldquo;{message}&rdquo;
+      </p>
+      {(overflows || expanded) && (
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          className="text-[0.6rem] tracking-widest uppercase text-yellow-500/50 hover:text-yellow-500 mt-1 transition-colors"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function GuestDashboard() {
   const router = useRouter();
   const [guests, setGuests] = useState<GuestRow[]>([]);
@@ -256,7 +298,8 @@ export default function GuestDashboard() {
         return;
       }
       const { guests: g, stats: s, rsvps: r } = await res.json();
-      setGuests(g);
+      const sorted = [...g].sort((a, b) => compareSeatNumbers(a.seat_number, b.seat_number));
+      setGuests(sorted);
       setStats(s);
       setRsvps(r ?? []);
     } catch {
@@ -329,6 +372,8 @@ export default function GuestDashboard() {
     if (filter === "declined") return g.rsvp?.attending === false;
     return true;
   });
+
+  const tableColors = buildTableColorMap(guests.map((g) => g.seat_number));
 
   return (
     <div className="min-h-screen bg-deep text-white font-['Lato',sans-serif]">
@@ -502,11 +547,20 @@ export default function GuestDashboard() {
                               </a>
                             </td>
                             <td className="py-3 pr-4 whitespace-nowrap">
-                              <SeatCell
-                                guestId={g.id}
-                                seatNumber={g.seat_number}
-                                onSaved={handleSeatSaved}
-                              />
+                              <div className="flex items-center gap-2">
+                                {g.seat_number && (
+                                  <span
+                                    className="w-2 h-2 rounded-full shrink-0"
+                                    style={{ backgroundColor: tableColors.get(seatTable(g.seat_number)) }}
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                <SeatCell
+                                  guestId={g.id}
+                                  seatNumber={g.seat_number}
+                                  onSaved={handleSeatSaved}
+                                />
+                              </div>
                             </td>
                             <td className="py-3 pr-4 whitespace-nowrap">
                               <StatusBadge rsvp={g.rsvp} />
@@ -582,9 +636,7 @@ export default function GuestDashboard() {
                     <p className="text-[0.65rem] text-white/35 mb-2">WhatsApp: {r.whatsapp}</p>
                   )}
                   {r.message ? (
-                    <p className="font-['Cormorant_Garamond',serif] italic text-white/65 text-base leading-relaxed">
-                      &ldquo;{r.message}&rdquo;
-                    </p>
+                    <MessageBlock message={r.message} />
                   ) : (
                     <p className="text-[0.7rem] text-white/20">No message left.</p>
                   )}

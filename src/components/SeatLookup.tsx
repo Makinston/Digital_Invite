@@ -3,18 +3,31 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { KenteDivider } from "./AfricanPattern";
+import { compareSeatNumbers, seatTable, buildTableColorMap } from "@/lib/seating";
 
 interface GuestSeat {
   name: string;
   seat_number: string | null;
 }
 
-function SeatRow({ name, seat_number }: GuestSeat) {
+function SeatRow({ name, seat_number, color }: GuestSeat & { color?: string }) {
   return (
-    <div className="flex items-center justify-between border border-gold/15 px-4 py-3">
+    <div
+      className="flex items-center justify-between border border-gold/15 pl-3 pr-4 py-3"
+      style={color ? { borderLeft: `3px solid ${color}` } : undefined}
+    >
       <span className="text-sm text-offwhite/80">{name}</span>
       {seat_number ? (
-        <span className="font-display text-lg text-shimmer shrink-0 ml-3">{seat_number}</span>
+        <span className="flex items-center gap-2 shrink-0 ml-3">
+          {color && (
+            <span
+              className="w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: color }}
+              aria-hidden="true"
+            />
+          )}
+          <span className="font-display text-lg text-shimmer">{seat_number}</span>
+        </span>
       ) : (
         <span className="text-[0.6rem] uppercase tracking-widest text-gold/40 shrink-0 ml-3">
           Not assigned yet
@@ -36,7 +49,12 @@ function SeatLookupModal({ onClose }: { onClose: () => void }) {
 
     fetch("/api/seat")
       .then((res) => res.json())
-      .then((data) => setGuests(data.guests ?? []))
+      .then((data) => {
+        const sorted = [...(data.guests ?? [])].sort((a, b) =>
+          compareSeatNumbers(a.seat_number, b.seat_number)
+        );
+        setGuests(sorted);
+      })
       .catch(() => setError("Could not reach the server"));
 
     return () => {
@@ -51,6 +69,11 @@ function SeatLookupModal({ onClose }: { onClose: () => void }) {
     if (!q) return guests;
     return guests.filter((g) => g.name.toLowerCase().includes(q));
   }, [guests, query]);
+
+  const colorMap = useMemo(
+    () => buildTableColorMap(guests?.map((g) => g.seat_number) ?? []),
+    [guests]
+  );
 
   return (
     <motion.div
@@ -112,7 +135,12 @@ function SeatLookupModal({ onClose }: { onClose: () => void }) {
             </p>
             <div className="space-y-2 overflow-y-auto pr-1">
               {filtered.map((g, i) => (
-                <SeatRow key={i} name={g.name} seat_number={g.seat_number} />
+                <SeatRow
+                  key={i}
+                  name={g.name}
+                  seat_number={g.seat_number}
+                  color={g.seat_number ? colorMap.get(seatTable(g.seat_number)) : undefined}
+                />
               ))}
               {filtered.length === 0 && (
                 <p className="text-offwhite/40 text-sm py-6 text-center">
