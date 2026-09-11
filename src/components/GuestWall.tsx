@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { KenteDivider } from "./AfricanPattern";
 
 interface WallMessage {
@@ -37,16 +37,27 @@ function NoteCard({
   name,
   message,
   index,
+  onExpand,
 }: {
   name: string;
   message: string;
   index: number;
+  onExpand: (name: string, message: string) => void;
 }) {
   const mod = index % ROTATIONS.length;
   const rotation = ROTATIONS[mod];
   const bg = NOTE_COLORS[mod];
   const h = NOTE_HEIGHTS[mod];
   const w = NOTE_WIDTHS[mod];
+
+  const [overflows, setOverflows] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el) return;
+    setOverflows(el.scrollHeight > el.clientHeight + 1);
+  }, [message]);
 
   return (
     <motion.div
@@ -76,13 +87,25 @@ function NoteCard({
         }}
       />
 
-      {/* Message text */}
-      <p
-        className="font-display italic leading-snug text-charcoal/80 overflow-hidden"
-        style={{ fontSize: message.length > 50 ? 15 : 17 }}
-      >
-        {message}
-      </p>
+      <div>
+        {/* Message text — clamped to 3 lines; a note this small can't fit
+            everything, so long ones get a "read more" into the full note. */}
+        <p
+          ref={textRef}
+          className="font-display italic leading-snug text-charcoal/80 line-clamp-3"
+          style={{ fontSize: message.length > 50 ? 15 : 17 }}
+        >
+          {message}
+        </p>
+        {overflows && (
+          <button
+            onClick={() => onExpand(name, message)}
+            className="mt-1 font-body text-[0.55rem] tracking-widest uppercase text-charcoal/40 hover:text-charcoal/70 transition-colors"
+          >
+            Read more
+          </button>
+        )}
+      </div>
 
       {/* Author */}
       <div className="mt-3 flex items-center gap-2">
@@ -95,11 +118,80 @@ function NoteCard({
   );
 }
 
+// Full note shown in an "unfolded" card — same paper-note styling, sized to
+// fit the whole message instead of being clipped.
+function NoteModal({
+  name,
+  message,
+  onClose,
+}: {
+  name: string;
+  message: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[100] bg-deep/90 flex items-center justify-center px-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="relative w-full max-w-md px-7 pt-10 pb-7"
+        style={{
+          backgroundColor: "#FFF8E7",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+        }}
+        initial={{ opacity: 0, scale: 0.92, rotate: -2 }}
+        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 260, damping: 22 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <PaperClip />
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-charcoal/30 hover:text-charcoal/60 transition-colors"
+          aria-label="Close"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 5L19 19M19 5L5 19" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
+        </button>
+
+        <p className="font-display italic text-charcoal/85 text-lg leading-relaxed mb-6">
+          {message}
+        </p>
+
+        <div className="flex items-center gap-2">
+          <div className="h-px flex-1 bg-charcoal/15" />
+          <p className="font-body text-[0.65rem] tracking-[0.2em] uppercase text-charcoal/40 shrink-0">
+            {name}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function GuestWall() {
   const titleRef = useRef<HTMLDivElement>(null);
   const inView = useInView(titleRef, { once: true, margin: "-10%" });
   const [messages, setMessages] = useState<WallMessage[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [openNote, setOpenNote] = useState<{ name: string; message: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -177,7 +269,13 @@ export default function GuestWall() {
               }}
             >
               {loop.map((m, i) => (
-                <NoteCard key={`${m.created_at}-${i}`} name={m.name} message={m.message} index={i} />
+                <NoteCard
+                  key={`${m.created_at}-${i}`}
+                  name={m.name}
+                  message={m.message}
+                  index={i}
+                  onExpand={(name, message) => setOpenNote({ name, message })}
+                />
               ))}
             </motion.div>
           </div>
@@ -192,6 +290,16 @@ export default function GuestWall() {
           RSVP to leave your own message on the wall
         </motion.p>
       </div>
+
+      <AnimatePresence>
+        {openNote && (
+          <NoteModal
+            name={openNote.name}
+            message={openNote.message}
+            onClose={() => setOpenNote(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
