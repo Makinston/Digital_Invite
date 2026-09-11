@@ -192,6 +192,7 @@ export default function GuestWall() {
   const [messages, setMessages] = useState<WallMessage[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [openNote, setOpenNote] = useState<{ name: string; message: string } | null>(null);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -259,13 +260,20 @@ export default function GuestWall() {
         )}
 
         {messages.length > 0 && (
-          <div className="overflow-hidden py-10">
-            <motion.div
+          <div
+            className="overflow-hidden py-10"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onTouchStart={() => setPaused(true)}
+            onTouchEnd={() => setPaused(false)}
+            onTouchCancel={() => setPaused(false)}
+          >
+            <div
               className="flex gap-8 items-center"
-              style={{ width: "max-content" }}
-              animate={loop.length > messages.length ? { x: [0, "-50%"] } : undefined}
-              transition={{
-                x: { duration: 36, ease: "linear", repeat: Infinity, repeatType: "loop" },
+              style={{
+                width: "max-content",
+                animation: loop.length > messages.length ? "wall-scroll 55s linear infinite" : undefined,
+                animationPlayState: paused ? "paused" : "running",
               }}
             >
               {loop.map((m, i) => (
@@ -277,7 +285,7 @@ export default function GuestWall() {
                   onExpand={(name, message) => setOpenNote({ name, message })}
                 />
               ))}
-            </motion.div>
+            </div>
           </div>
         )}
 
