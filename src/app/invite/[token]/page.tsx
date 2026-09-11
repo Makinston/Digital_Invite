@@ -4,6 +4,7 @@ import { db, isDbConfigured, ensureSchema, type Guest } from "@/lib/db";
 import { WEDDING } from "@/lib/constants";
 import Preloader from "@/components/Preloader";
 import AudioPlayer from "@/components/AudioPlayer";
+import BuilderBadge from "@/components/BuilderBadge";
 import Hero from "@/components/Hero";
 import InviteSection from "@/components/InviteSection";
 import Gallery from "@/components/Gallery";
@@ -61,6 +62,7 @@ export default async function InvitePage({ params }: Props) {
     <>
       <Preloader />
       <AudioPlayer />
+      <BuilderBadge />
       <main>
         <Hero guestName={guest?.name} />
         <InviteSection />

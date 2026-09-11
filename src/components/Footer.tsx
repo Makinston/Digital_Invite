@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { KenteBackground, AdinkraSymbol } from "./AfricanPattern";
-import { WEDDING } from "@/lib/constants";
+import { WEDDING, BUILDER } from "@/lib/constants";
 
 export default function Footer() {
   const ref = useRef<HTMLDivElement>(null);
@@ -44,6 +44,15 @@ export default function Footer() {
           <p className="font-script text-xl text-gold/40">
             {WEDDING.hashtag}
           </p>
+
+          <a
+            href={BUILDER.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-10 inline-block font-body text-[0.55rem] text-offwhite/15 hover:text-gold/50 tracking-[0.25em] uppercase transition-colors"
+          >
+            Built by {BUILDER.name}
+          </a>
         </motion.div>
       </div>
     </footer>

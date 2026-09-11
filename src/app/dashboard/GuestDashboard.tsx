@@ -171,6 +171,103 @@ function SeatCell({
   );
 }
 
+function NameCell({
+  guestId,
+  name,
+  onSaved,
+}: {
+  guestId: string;
+  name: string;
+  onSaved: (id: string, name: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(name);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const cancel = () => {
+    setValue(name);
+    setEditing(false);
+    setError(null);
+  };
+
+  const save = async () => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      setError("Can't be empty");
+      return;
+    }
+    if (trimmed === name) {
+      setEditing(false);
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/guests/${guestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed }),
+      });
+      if (res.ok) {
+        onSaved(guestId, trimmed);
+        setEditing(false);
+      } else {
+        const data = await res.json().catch(() => null);
+        setError(data?.error ?? "Failed to save");
+      }
+    } catch {
+      setError("Could not reach server");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!editing) {
+    return (
+      <button
+        onClick={() => {
+          setValue(name);
+          setEditing(true);
+        }}
+        className="text-white/80 font-medium hover:text-yellow-400 transition-colors text-left"
+        title="Click to edit name"
+      >
+        {name}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1">
+      <input
+        autoFocus
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") save();
+          if (e.key === "Escape") cancel();
+        }}
+        className="w-36 sm:w-44 bg-white/5 border border-yellow-500/30 rounded px-2 py-1 text-xs text-white focus:outline-none"
+      />
+      <button
+        onClick={save}
+        disabled={saving}
+        className="text-[0.6rem] text-yellow-500/70 hover:text-yellow-500 disabled:opacity-40 shrink-0"
+      >
+        {saving ? "…" : "✓"}
+      </button>
+      <button
+        onClick={cancel}
+        className="text-[0.6rem] text-white/30 hover:text-white/60 shrink-0"
+      >
+        ✕
+      </button>
+      {error && <span className="text-[0.55rem] text-red-400/70 shrink-0">{error}</span>}
+    </div>
+  );
+}
+
 function DeleteButton({
   guestId,
   guestName,
@@ -322,6 +419,10 @@ export default function GuestDashboard() {
 
   const handleSeatSaved = (id: string, seat: string | null) => {
     setGuests((gs) => gs.map((g) => (g.id === id ? { ...g, seat_number: seat } : g)));
+  };
+
+  const handleNameSaved = (id: string, name: string) => {
+    setGuests((gs) => gs.map((g) => (g.id === id ? { ...g, name } : g)));
   };
 
   const handleGuestDeleted = (id: string) => {
@@ -529,8 +630,8 @@ export default function GuestDashboard() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.02 }}
                           >
-                            <td className="py-3 pr-4 text-white/80 font-medium whitespace-nowrap">
-                              {g.name}
+                            <td className="py-3 pr-4 whitespace-nowrap">
+                              <NameCell guestId={g.id} name={g.name} onSaved={handleNameSaved} />
                             </td>
                             <td className="py-3 pr-4 text-[0.65rem] text-yellow-500/40 whitespace-nowrap hidden sm:table-cell">
                               /invite/{g.token}

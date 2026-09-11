@@ -1,5 +1,6 @@
 import Preloader from "@/components/Preloader";
 import AudioPlayer from "@/components/AudioPlayer";
+import BuilderBadge from "@/components/BuilderBadge";
 import Hero from "@/components/Hero";
 import InviteSection from "@/components/InviteSection";
 import Gallery from "@/components/Gallery";
@@ -20,6 +21,7 @@ export default function Home() {
     <>
       <Preloader />
       <AudioPlayer />
+      <BuilderBadge />
       <main>
         <Hero />
         <InviteSection />

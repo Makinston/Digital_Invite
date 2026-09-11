@@ -265,3 +265,10 @@ export const WEDDING = {
     },
   },
 } as const;
+
+export const BUILDER = {
+  name: "Cogitator",
+  whatsappUrl:
+    "https://wa.me/2348059472483?text=" +
+    encodeURIComponent("Hi! I saw a wedding site you built and wanted to reach out."),
+} as const;
