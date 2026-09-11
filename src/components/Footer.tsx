@@ -49,7 +49,7 @@ export default function Footer() {
             href={BUILDER.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 inline-block font-body text-[0.55rem] text-offwhite/15 hover:text-gold/50 tracking-[0.25em] uppercase transition-colors"
+            className="mt-10 inline-block font-body text-[0.65rem] text-gold hover:text-gold-light tracking-[0.25em] uppercase font-semibold transition-colors"
           >
             Built by {BUILDER.name}
           </a>
